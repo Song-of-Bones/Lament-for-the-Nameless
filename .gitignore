@@ -115,3 +115,6 @@ InitTestScene*.unity*
 
 # Tuanjie AI 工具缓存
 /.codely-cli/
+
+# 本地截图
+/screenshots/
