@@ -6,17 +6,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-// 引入新版输入系统的命名空间（如果项目启用了的话）
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
 /// <summary>
 /// 菜单按钮的入场细节 / 悬停 / 两次点击交互。
-/// 第一次点击：选中（白色高亮扫入并保持，文字与竖条反色）。
-/// 第二次点击同一按钮：确认（高亮闪动 → 可选菜单退场 → 触发「点击结束」）。
-/// 点击另一个按钮则切换选中，不会触发确认。
-/// 点击屏幕空白区域则取消选中。
 /// </summary>
 [DisallowMultipleComponent]
 [AddComponentMenu("UI/菜单按钮反馈 (UIMenuButton)")]
@@ -54,6 +49,10 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [Tooltip("第二次点击确认后触发（可接场景加载等）")]
     [SerializeField] private UnityEvent 点击结束;
 
+    [Header("窗口设置 (新增)")]
+    [Tooltip("填写全局数据库里配置的 ID（比如 setting_audio），确认时会自动加载对应场景")]
+    [SerializeField] private string 打开窗口ID;
+
     [Header("过渡")]
     [SerializeField, Min(0.01f)] private float 过渡速度 = 14f;
     [SerializeField] private float 按下缩放 = 0.98f;
@@ -77,7 +76,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     private Coroutine _sweepRoutine;
     private Coroutine _confirmRoutine;
 
-    /// <summary>是否处于“已选中、等待第二次点击确认”状态。</summary>
     public bool 已选中 => _selected;
 
     private void Awake()
@@ -103,7 +101,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         _hover = Mathf.MoveTowards(_hover, _isHover && !_selected ? 1f : 0f, Time.unscaledDeltaTime * 过渡速度);
         Apply();
 
-        // 【修复：兼容新版 Input System】
 #if ENABLE_INPUT_SYSTEM
         bool mouseDown = Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
         Vector2 mousePos = Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
@@ -112,7 +109,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         Vector2 mousePos = Input.mousePosition;
 #endif
 
-        // 【新增逻辑】点击非按钮区域时，取消选中状态
         if (_selected && !_confirming && mouseDown)
         {
             PointerEventData eventData = new PointerEventData(EventSystem.current) { position = mousePos };
@@ -122,7 +118,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             bool clickedThis = false;
             foreach (var r in results)
             {
-                // 如果点到了自己（或者自己的子节点）
                 if (r.gameObject == gameObject || r.gameObject.transform.IsChildOf(transform))
                 {
                     clickedThis = true;
@@ -130,8 +125,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
                 }
             }
 
-            // 如果没点到自己，说明点到了空白处、背景或别的按钮
-            // 此时调用取消选中
             if (!clickedThis)
             {
                 取消选中();
@@ -170,8 +163,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         if (文字 != null)
             文字.color = _selected ? Color.black : Color.Lerp(文字_常态, 文字_悬停, _hover);
     }
-
-    // ---------- 入场 ----------
 
     public void PlayIntro(float delay)
     {
@@ -242,8 +233,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         _introRoutine = null;
     }
 
-    // ---------- 点击 ----------
-
     public void OnPointerClick(PointerEventData eventData)
     {
         if (_confirming) return;
@@ -312,6 +301,25 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             if (wait > 0f) yield return WaitUnscaled(wait);
         }
 
+        // 如果面板上填了 ID，自动寻找 Manager 并打开
+        if (!string.IsNullOrEmpty(打开窗口ID))
+        {
+#if UNITY_2023_1_OR_NEWER
+            // 【已修复】将 FindFirstObjectByType 替换为 FindAnyObjectByType 解决警告
+            var manager = FindAnyObjectByType<SettingsWindowManager>();
+#else
+            var manager = FindObjectOfType<SettingsWindowManager>();
+#endif
+            if (manager != null)
+            {
+                manager.打开设置(打开窗口ID);
+            }
+            else
+            {
+                Debug.LogWarning($"[UIMenuButton] 找不到 SettingsWindowManager，无法打开窗口ID：{打开窗口ID}", this);
+            }
+        }
+
         点击结束?.Invoke();
         _confirming = false;
         _confirmRoutine = null;
@@ -343,8 +351,6 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
         size.x = width;
         选中条.sizeDelta = size;
     }
-
-    // ---------- 指针 ----------
 
     public void OnPointerEnter(PointerEventData eventData) => _isHover = true;
 

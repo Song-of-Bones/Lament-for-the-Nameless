@@ -37,6 +37,8 @@ public class UIMenuPopIn : MonoBehaviour
 
     [Header("其它")]
     [SerializeField] private bool 不受时间缩放影响 = true;
+    [Tooltip("关闭后需要外部（例如 LobbyIntro）主动调用 Play()")]
+    [SerializeField] private bool 启用时自动播放 = true;
 
     private class Item
     {
@@ -58,6 +60,7 @@ public class UIMenuPopIn : MonoBehaviour
 
     private void OnEnable()
     {
+        if (!启用时自动播放) return;
         if (_items.Count == 0) Collect();
         Play();
     }
@@ -81,6 +84,23 @@ public class UIMenuPopIn : MonoBehaviour
         }
 
         _routine = StartCoroutine(RunAll());
+    }
+
+    /// <summary>不播放动画，直接隐藏到入场姿态（供外部控制何时出现）。</summary>
+    public void 隐藏()
+    {
+        if (_items.Count == 0) Collect();
+        if (_routine != null) StopAllCoroutines();
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            var it = _items[i];
+            it.group.alpha = 0f;
+            it.rect.anchoredPosition = it.basePos + Vector2.left * 滑入距离;
+            it.rect.localScale = it.baseScale * 起始缩放;
+            it.rect.localRotation = Quaternion.Euler(0f, 0f, 起始角度);
+            it.motion?.ResetState();
+        }
     }
 
     /// <summary>切换选中项：目标按钮进入选中，其余按钮取消选中。</summary>
