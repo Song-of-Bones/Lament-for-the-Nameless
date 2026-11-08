@@ -52,6 +52,8 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     [Header("窗口设置 (新增)")]
     [Tooltip("填写全局数据库里配置的 ID（比如 setting_audio），确认时会自动加载对应场景")]
     [SerializeField] private string 打开窗口ID;
+    [Tooltip("勾选后按「跳转窗口配置列表」直接切换场景；不勾选则按「异步窗口配置列表」叠加打开")]
+    [SerializeField] private bool 窗口是否为跳转 = false;
 
     [Header("过渡")]
     [SerializeField, Min(0.01f)] private float 过渡速度 = 14f;
@@ -312,7 +314,7 @@ public class UIMenuButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 #endif
             if (manager != null)
             {
-                manager.打开设置(打开窗口ID);
+                manager.打开设置(打开窗口ID, 窗口是否为跳转);
             }
             else
             {

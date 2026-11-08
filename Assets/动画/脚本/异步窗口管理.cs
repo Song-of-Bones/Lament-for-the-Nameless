@@ -33,27 +33,51 @@ public class SettingsWindowManager : MonoBehaviour
         }
     }
 
-    /// <summary>根据全局注册的 ID 异步加载并打开窗口</summary>
+    /// <summary>根据全局注册的 ID 异步加载并打开窗口（默认按异步窗口处理）</summary>
     public void 打开设置(string 窗口ID)
     {
+        打开设置(窗口ID, false);
+    }
+
+    /// <summary>根据全局注册的 ID 打开窗口；是跳转时直接切换场景，否则叠加加载为窗口</summary>
+    public void 打开设置(string 窗口ID, bool 是跳转)
+    {
         if (_open || _loading) return;
-        
+
         if (窗口数据库 == null)
         {
             Debug.LogError("[SettingsWindowManager] 场景中找不到 WindowDatabase 组件！", this);
             return;
         }
 
-        string targetScene = 窗口数据库.GetSceneName(窗口ID);
+        string targetScene = 是跳转
+            ? 窗口数据库.GetJumpSceneName(窗口ID)
+            : 窗口数据库.GetAsyncSceneName(窗口ID);
+
         if (string.IsNullOrEmpty(targetScene))
         {
-            // 【已修改】这里是你要改的报警提示
-            Debug.LogWarning($"[SettingsWindowManager] 场景数据库中没有 ID 为 {窗口ID} 的有效配置", this);
+            Debug.LogWarning($"[SettingsWindowManager] 数据库中没有 ID 为 {窗口ID} 的{(是跳转 ? "跳转" : "异步")}窗口配置", this);
             return;
         }
-        
+
+        if (是跳转)
+        {
+            _loading = true;
+            StartCoroutine(跳转Routine(targetScene));
+            return;
+        }
+
         _当前加载的场景名 = targetScene;
         StartCoroutine(OpenRoutine());
+    }
+
+    private IEnumerator 跳转Routine(string 场景名)
+    {
+        var op = SceneManager.LoadSceneAsync(场景名, LoadSceneMode.Single);
+        if (op != null)
+            while (!op.isDone) yield return null;
+
+        _loading = false;
     }
 
     private IEnumerator OpenRoutine()

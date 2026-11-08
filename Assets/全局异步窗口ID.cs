@@ -3,6 +3,7 @@ using UnityEngine;
 
 /// <summary>
 /// 全局窗口数据库：现在作为场景组件存在，方便直接在 Inspector 面板配置。
+/// 异步窗口与跳转窗口各有一份列表，ID 可以重复，互不影响。
 /// </summary>
 public class WindowDatabase : MonoBehaviour
 {
@@ -15,14 +16,34 @@ public class WindowDatabase : MonoBehaviour
         public string sceneName;
     }
 
-    [Header("窗口配置列表")]
+    [Header("异步窗口配置列表")]
+    [Tooltip("按钮「窗口是否为跳转」不勾选时，加在本场景之上的窗口")]
     public List<WindowConfig> configs = new List<WindowConfig>();
 
-    /// <summary>根据 ID 获取实际场景名</summary>
-    public string GetSceneName(string id)
+    [Header("跳转窗口配置列表")]
+    [Tooltip("按钮「窗口是否为跳转」勾选时，直接切换到的场景；ID 可与上面的列表相同")]
+    public List<WindowConfig> jumpConfigs = new List<WindowConfig>();
+
+    /// <summary>兼容旧调用：按异步窗口列表查找。</summary>
+    public string GetSceneName(string id) => GetAsyncSceneName(id);
+
+    /// <summary>按异步窗口列表查找场景名。</summary>
+    public string GetAsyncSceneName(string id)
     {
-        if (string.IsNullOrEmpty(id)) return null;
-        var config = configs.Find(c => c.id == id);
+        return 查找(configs, id);
+    }
+
+    /// <summary>按跳转窗口列表查找场景名。</summary>
+    public string GetJumpSceneName(string id)
+    {
+        return 查找(jumpConfigs, id);
+    }
+
+    private static string 查找(List<WindowConfig> 列表, string id)
+    {
+        if (string.IsNullOrEmpty(id) || 列表 == null) return null;
+
+        var config = 列表.Find(c => c != null && c.id == id);
         return config != null ? config.sceneName : null;
     }
 }
