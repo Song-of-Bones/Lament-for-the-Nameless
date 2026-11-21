@@ -5,6 +5,12 @@ cd /d "%~dp0"
 echo.
 echo ========== Backup to GitHub ==========
 
+:: Set the remote URL to the target repository
+git remote set-url origin https://github.com/Song-of-Bones/Lament-for-the-Nameless.git >nul 2>&1
+if errorlevel 1 (
+    git remote add origin https://github.com/Song-of-Bones/Lament-for-the-Nameless.git
+)
+
 git add -A
 git diff --cached --quiet >nul 2>&1
 if not errorlevel 1 goto :onlypush
