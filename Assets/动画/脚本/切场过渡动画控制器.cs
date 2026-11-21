@@ -39,7 +39,6 @@ public class LobbyIntro : MonoBehaviour
     [SerializeField, Min(0f)] private float 尾注延迟 = 1.2f;
     [SerializeField, Min(0.01f)] private float 尾注时长 = 0.7f;
 
-    private bool _introFinished;
     private Material _snowMaterial;
     private CanvasGroup _snowGroup;
 
@@ -87,8 +86,6 @@ public class LobbyIntro : MonoBehaviour
 
         yield return Wait(菜单延迟);
         if (菜单 != null) 菜单.Play();
-
-        _introFinished = true;
     }
 
     private IEnumerator FadeOverlay()

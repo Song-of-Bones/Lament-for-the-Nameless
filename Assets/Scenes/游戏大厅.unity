@@ -1997,9 +1997,7 @@ MonoBehaviour:
     sceneName: 
   - id: 
     sceneName: 
-  jumpConfigs:
-  - id: 1
-    sceneName: "\u767B\u5F55\u573A\u666F"
+  jumpConfigs: []
 --- !u!1 &1347088268
 GameObject:
   m_ObjectHideFlags: 0
@@ -2202,7 +2200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 6242815633131269844, guid: c625db0eb528c0a4094e3d8c3f516458, type: 3}
+  m_Sprite: {fileID: 8381804602533937797, guid: b70d8f5e68c750b43bf2e8ea8204f889, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

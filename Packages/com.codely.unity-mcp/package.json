@@ -1,0 +1,18 @@
+{
+  "name": "com.codely.unity-mcp",
+  "displayName": "Codely Unity MCP",
+  "version": "0.1.0",
+  "unity": "2021.3",
+  "description": "An editor-only bridge that exposes Unity Editor capabilities to any MCP client over a local TCP socket, plus a bundled Node/TypeScript MCP server. Designed so an AI agent with no prior Unity knowledge can discover the project, understand the tool surface, and operate the editor safely.",
+  "keywords": [
+    "mcp",
+    "ai",
+    "agent",
+    "automation",
+    "editor"
+  ],
+  "author": {
+    "name": "Codely"
+  },
+  "documentationUrl": "https://github.com/"
+}

@@ -118,3 +118,15 @@ InitTestScene*.unity*
 
 # 本地截图
 /screenshots/
+
+# 防逆向工程的本机密钥（绝不提交）
+/Assets/防逆向工程/密钥~/
+/1/
+
+#Unity-skills技能库
+/.Unity-skills/
+# ����ǩ����Կ�⣨�����ύ��
+/Keys/
+
+# Codely Unity MCP server dependencies (dist/ is committed so clients can run it directly)
+/Packages/com.codely.unity-mcp/Server~/node_modules/

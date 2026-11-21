@@ -1,0 +1,16 @@
+{
+    "name": "Codely.UnityMcp.Editor",
+    "rootNamespace": "Codely.UnityMcp",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
