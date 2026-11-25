@@ -208,12 +208,36 @@ namespace Codely.UnityMcp
             {
                 ["scenes"] = CountAssets("t:Scene"),
                 ["scripts"] = CountAssets("t:MonoScript"),
+                ["project_scripts"] = CountProjectScripts(),
                 ["prefabs"] = CountAssets("t:Prefab"),
                 ["materials"] = CountAssets("t:Material"),
                 ["textures"] = CountAssets("t:Texture2D"),
                 ["animation_clips"] = CountAssets("t:AnimationClip"),
                 ["scriptable_objects"] = CountAssets("t:ScriptableObject")
             };
+        }
+
+        /// <summary>
+        /// Scripts owned by this project, excluding bundled third-party trees. The raw
+        /// MonoScript count is dominated by TJGenerators and misleads readers about size.
+        /// </summary>
+        private static int CountProjectScripts()
+        {
+            try
+            {
+                int count = 0;
+                foreach (var guid in AssetDatabase.FindAssets("t:MonoScript", new[] { "Assets" }))
+                {
+                    string path = AssetDatabase.GUIDToAssetPath(guid);
+                    if (string.IsNullOrEmpty(path)) continue;
+                    if (path.IndexOf("/cn.tuanjie.", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+                    if (path.IndexOf("/TJGenerators/", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+                    if (path.IndexOf("/Welcome/", StringComparison.OrdinalIgnoreCase) >= 0) continue;
+                    count++;
+                }
+                return count;
+            }
+            catch { return -1; }
         }
 
         private static int CountAssets(string filter)

@@ -158,6 +158,9 @@ namespace Codely.UnityMcp
                 else logs++;
             }
 
+            var diagnosisInput = new List<string>(matched.Count);
+            foreach (var entry in matched) diagnosisInput.Add(entry.Message);
+
             var result = new Dictionary<string, object>(StringComparer.Ordinal)
             {
                 ["format"] = format,
@@ -169,6 +172,7 @@ namespace Codely.UnityMcp
                 ["error_count"] = errors,
                 ["warning_count"] = warnings,
                 ["log_count"] = logs,
+                ["diagnosis"] = AiContract.Diagnose(diagnosisInput),
                 ["entries"] = items
             };
 

@@ -181,7 +181,9 @@ namespace Codely.UnityMcp
                 ["nodeCount"] = emitted,
                 ["truncated"] = truncated,
                 ["maxDepth"] = maxDepth,
-                ["scenes"] = scenes
+                ["key_objects"] = KeyObjects(),
+                ["scenes"] = scenes,
+                ["next"] = "Use key_objects[].ref.path for camera/UI/manager targets, or manage_gameobject.find for anything else."
             };
             if (truncated)
                 data["hint"] = "Hierarchy was truncated. Increase maxNodes/maxDepth, or use manage_gameobject.find/list_children to drill into a subtree.";
@@ -204,11 +206,18 @@ namespace Codely.UnityMcp
             {
                 ["name"] = t.name,
                 ["instanceID"] = UnityEngine.EntityId.ToULong(t.gameObject.GetEntityId()),
+                ["role"] = AiContract.RoleOf(t.gameObject),
                 ["active"] = t.gameObject.activeSelf,
                 ["tag"] = t.tag,
                 ["layer"] = t.gameObject.layer,
                 ["components"] = components
             };
+
+            string role = Convert.ToString(node["role"]);
+            bool interesting = role == "canvas" || role == "camera" || role == "event_system" ||
+                               role == "manager" || role == "light" || role == "audio_listener";
+            if (depth == 1 || interesting)
+                node["ref"] = AiContract.RefFor(t.gameObject);
 
             if (depth < maxDepth)
             {
@@ -227,6 +236,47 @@ namespace Codely.UnityMcp
             }
 
             return node;
+        }
+
+        /// <summary>
+        /// Entry points an agent usually needs first: cameras, UI roots, event systems and
+        /// manager-like objects, each with a ready-to-pass ref.
+        /// </summary>
+        private static List<object> KeyObjects()
+        {
+            var result = new List<object>();
+            var seen = new HashSet<ulong>();
+
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                var scene = SceneManager.GetSceneAt(i);
+                if (!scene.IsValid()) continue;
+
+                foreach (var root in scene.GetRootGameObjects())
+                {
+                    foreach (var component in root.GetComponentsInChildren<Component>(true))
+                    {
+                        if (component == null) continue;
+                        string role = AiContract.RoleOf(component.gameObject);
+                        if (role != "canvas" && role != "camera" && role != "event_system" &&
+                            role != "manager" && role != "audio_listener")
+                            continue;
+
+                        ulong id = UnityEngine.EntityId.ToULong(component.gameObject.GetEntityId());
+                        if (!seen.Add(id)) continue;
+
+                        result.Add(new Dictionary<string, object>(StringComparer.Ordinal)
+                        {
+                            ["role"] = role,
+                            ["name"] = component.gameObject.name,
+                            ["path"] = ManageGameObjectTool.HierarchyPath(component.transform),
+                            ["ref"] = AiContract.RefFor(component.gameObject)
+                        });
+                        if (result.Count >= 20) return result;
+                    }
+                }
+            }
+            return result;
         }
 
         // ---- resolution ------------------------------------------------------ //

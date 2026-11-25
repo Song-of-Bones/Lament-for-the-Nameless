@@ -1,11 +1,67 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { UnityClient } from "./unityClient.js";
+import { recipesJson } from "./recipes.js";
 
 /**
  * Resources are the "read the project without calling a tool" path: an MCP client can
  * attach them to context up front, which is exactly what a Unity-newcomer agent needs.
  */
 export function registerResources(server: McpServer, client: UnityClient): void {
+  server.registerResource(
+    "project-map",
+    "unity://project/map",
+    {
+      title: "Unity project map",
+      description:
+        "Semantic map: folder roles, scenes and their purpose, custom components with serialized fields and usage, namespaces, entry points.",
+      mimeType: "application/json"
+    },
+    async (uri) => {
+      try {
+        const response = await client.callRead("project_map", {}, 120_000);
+        return {
+          contents: [
+            {
+              uri: uri.href,
+              mimeType: "application/json",
+              text: JSON.stringify(response.data, null, 2)
+            }
+          ]
+        };
+      } catch (error) {
+        return {
+          contents: [
+            {
+              uri: uri.href,
+              mimeType: "application/json",
+              text: JSON.stringify({ error: error instanceof Error ? error.message : String(error) }, null, 2)
+            }
+          ]
+        };
+      }
+    }
+  );
+
+  server.registerResource(
+    "task-recipes",
+    "unity://project/recipes",
+    {
+      title: "Verified task recipes",
+      description:
+        "Ordered, verified call sequences for common requests: change UI text, swap a material, add a button, aim a camera, diagnose the console, find a feature owner, change an animator.",
+      mimeType: "application/json"
+    },
+    async (uri) => ({
+      contents: [
+        {
+          uri: uri.href,
+          mimeType: "application/json",
+          text: recipesJson()
+        }
+      ]
+    })
+  );
+
   server.registerResource(
     "project-overview",
     "unity://project/overview",

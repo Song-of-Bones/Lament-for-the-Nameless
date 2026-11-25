@@ -1,9 +1,11 @@
-# Codely Bridge 1.0.93 拆解报告
+# Codely Bridge 拆解与自研 Unity MCP 实现
 
 分析对象：`Library/PackageCache/cn.tuanjie.codely.bridge@fd2b9ee67c14`
 （UPM 包名 `cn.tuanjie.codely.bridge`，本机版本 1.0.93）
 
-目的：把 Tuanjie Cowork 与 Unity 之间的私有通道拆清楚，作为独立 MCP 实现的行为契约。
+目的：把 Tuanjie Cowork 与 Unity 之间的私有通道拆清楚，并以此行为契约为基础，交付一套不依赖 Cowork 的本地 MCP 桥。
+
+> 更新时间：2026-11-22。第 1–6 节是 Cowork Bridge 的拆解；第 7–9 节是自研实现与验证；第 10 节是本项目现状快照。
 
 ---
 
@@ -43,14 +45,14 @@ UnityEditor API / 场景 / 资源 / 播放模式
 | 项目 | 值 |
 |---|---|
 | 监听地址 | 127.0.0.1 |
-| 端口 | 默认 25916 起探测，动态分配；本机当前 **38475** |
+| 端口 | 默认 25916 起探测，动态分配（实测示例 38475，重启后会变） |
 | 握手（服务器→客户端） | `WELCOME UNITY-TCP 1 FRAMING=1 SERVER_VERSION=3` |
 | 握手（客户端→服务器） | `PLATFORM=<win/mac/linux>`、`CLIENT_VERSION=<n>`；`>=2` 才接收推送通知 |
 | 帧格式 | `FRAMING=1`，原生实现，未公开；单帧上限 64 MiB |
 | 心跳文件 | `<ProjectRoot>/Temp/.com-unity-codely.json` |
 | 发现方式 | 客户端读心跳文件拿端口，连上后读 WELCOME |
 
-心跳文件实测内容：
+心跳文件字段：
 
 ```json
 {
@@ -207,11 +209,11 @@ UnityEditor API / 场景 / 资源 / 播放模式
 | `manage_dialog` | 高 | 需要 Win32/Cocoa 模态框枚举与跨线程点击 |
 | `manage_bake` | 低 | 官方 API 直接可用 |
 
-结论：**“21 个工具全量 1:1”不是一次交付能达成的**。可先做到“日常 90% 工作流等价”，把原生窗口流、模态框点击、MP4 录制放到后续阶段。
+结论：**“21 个工具全量 1:1”不是一次交付能达成的**。先做到“日常 90% 工作流等价”，把原生窗口流、模态框点击、MP4 录制放到后续阶段。
 
 ---
 
-## 7. 独立 MCP 方案（拟）
+## 7. 独立 MCP 方案（已落地）
 
 ```
 AI 客户端（Claude Code / Cursor / Codex / 任意 MCP 客户端）
@@ -229,18 +231,12 @@ UnityEditor API
 设计要点：
 
 1. **零原生依赖**：`TcpListener` + 长度前缀帧，Windows/macOS/Linux 一致；不引入闭源 DLL。
-2. **发现**：Unity 侧写 `<ProjectRoot>/Temp/.unity-mcp.json`（端口、pid、projectPath、state、version）；MCP 侧优先读它，支持 `UNITY_MCP_PORT` / `UNITY_MCP_PROJECT` 覆盖，多实例按 projectPath 选。
-3. **抗域重载**：长操作在 Unity 侧拆成状态机（发起 → 每帧推进 → 完成回包）；MCP 侧断线后重读心跳、等待新端口并重新提交/查询。对 AI 客户端仍表现为一次阻塞调用。
-4. **写保护**：保留“Play Mode 拒绝写”语义，但由 Unity 侧统一判定，MCP 侧只做前置提示。
-5. **脚本执行**：首期用编辑器内置 `Microsoft.CSharp.CSharpCodeProvider` 编译到内存（零依赖），入口约定 `static object Run()` / `static Task<object> RunAsync()`；后续再评估 Roslyn。
-6. **JSON**：Unity 侧自带轻量解析/序列化（避免 Newtonsoft / System.Text.Json 依赖）。
-7. **MCP 工具形态**：与 Cowork 对齐为 `manage_scene`、`manage_editor`… 这类“一个工具 + action 参数”，而不是拆成 60 个小工具，便于复用同一套行为契约；同时给每个 action 生成 JSON Schema。
-
-### 分期
-
-- **P1 核心闭环**：传输/发现/心跳、`list_tools`、`manage_editor`（状态/播放/刷新/编译）、`manage_scene`、`manage_gameobject`、`manage_asset`、`read_console`、`execute_menu_item`、`manage_package`、`manage_gameview`、`manage_guid`、`manage_screenshot`（PNG）、`exec_editor_script`。
-- **P2**：`exec_runtime_script`、`manage_bake`、GIF、`manage_job`、`manage_dialog`。
-- **P3**：`manage_input`、MP4、`manage_window_bridge`（评估是否值得做）。
+2. **发现**：Unity 侧写 `<ProjectRoot>/Temp/.codely-unity-mcp.json`（端口、pid、projectPath、state、last_error）；MCP 侧优先读它，支持 `UNITY_MCP_PROJECT` 覆盖，多实例按 projectPath 选。
+3. **抗域重载**：长操作在 Unity 侧拆成状态机（发起 → 每帧推进 → 完成回包）；MCP 侧断线后重读心跳、等待新端口并继续轮询。对 AI 客户端仍表现为一次阻塞调用。
+4. **写保护**：Play Mode 拒绝写由 Unity 侧统一判定，MCP 侧只做前置提示。
+5. **脚本执行**：编辑器内置 `Microsoft.CSharp.CSharpCodeProvider` 编译到临时 dll（零依赖），入口约定 `static object Run()`。
+6. **JSON**：Unity 侧自带轻量解析/序列化（`MiniJson`），不依赖 Newtonsoft / System.Text.Json。
+7. **工具形态**：与 Cowork 对齐为“一个工具 + action 参数”，而不是拆成几十个小工具。
 
 ---
 
@@ -252,51 +248,155 @@ UnityEditor API
 
 ---
 
-## 9. 实际交付（2026-11-21）
-
-已按第 7 节方案落地，并与 Cowork Bridge 并存运行（不同端口，互不干扰）。
+## 9. 自研实现与验证（2026-11-22）
 
 ### 9.1 交付物
 
 | 位置 | 内容 |
 |---|---|
-| `Packages/com.codely.unity-mcp/Editor/` | Unity 侧（纯 managed，Editor-only asmdef）：`Core/`（MiniJson、帧协议、TCP 服务器、控制台缓冲、写保护、路径）、`Tools/`（每个工具一个文件）、`UI/`（Tools > Codely > Unity MCP 状态窗口） |
-| `Packages/com.codely.unity-mcp/Server~/` | Node/TypeScript MCP stdio 服务器（`src/` + 已构建 `dist/`） |
-| `docs/unity-mcp/bridge-analysis.md` | 本报告 |
-| `Packages/com.codely.unity-mcp/README.md` | 安装、MCP 客户端配置、排查 |
+| `Packages/com.codely.unity-mcp/Editor/Core/` | `MiniJson`、`JsonUtil`、`Framing`、`McpBridgeServer`、`CommandRouter`、`ConsoleBuffer`、`WriteGuard`、`PathUtil`、`AiContract`、`ScriptAnalysis` |
+| `Packages/com.codely.unity-mcp/Editor/Tools/` | 17 个工具实现 + `ToolCatalog` |
+| `Packages/com.codely.unity-mcp/Editor/UI/` | `Tools > Codely > Unity MCP` 状态窗口 |
+| `Packages/com.codely.unity-mcp/Server~/` | Node/TypeScript MCP stdio 服务器（`src/` + `dist/`） |
+| `Packages/com.codely.unity-mcp/README.md` | 安装、客户端配置、排错 |
 
-### 9.2 实际工具（13 个）
+### 9.2 实际工具（17 个）
 
-`project_overview`、`list_tools`、`manage_editor`、`manage_scene`、`manage_gameobject`、`manage_asset`、`read_console`、`execute_menu_item`、`manage_package`、`manage_gameview`、`manage_guid`、`manage_screenshot`、`exec_editor_script`。
+`project_overview`、`project_map`、`list_tools`、`tool_help`、`inspect_script`、`find_usage`、`manage_editor`、`manage_scene`、`manage_gameobject`、`manage_asset`、`read_console`、`execute_menu_item`、`manage_package`、`manage_gameview`、`manage_guid`、`manage_screenshot`、`exec_editor_script`。
 
 相比原 Bridge 的 21 个，未实现：`manage_bake`、`execute_custom_tool`/`get_custom_tools`、`manage_window_bridge`、`manage_input`、`manage_dialog`、`manage_job`，以及截图中的 GIF/MP4/asset/UI Toolkit 分支。
 
-### 9.3 传输与发现
+### 9.3 面向 AI 的返回契约
 
-- TCP `127.0.0.1`，4 字节小端长度 + UTF-8 JSON；单帧上限 64 MiB。
-- 发现文件：`Temp/.codely-unity-mcp.json`（`port`、`state`、`pid`、`unity_version`、`last_error`…）。
-- `state` 取值：`ready` / `reloading` / `stopped` / `error`。
-- 端口按项目持久化到 `EditorPrefs`，默认 27180；占用时顺序探测并回退到随机端口（实测域重载后从 27180 迁到 27181 并被客户端自动跟随）。
+目标：让不懂 Unity 的模型不必读源码，也能“看懂返回什么、下一步怎么做”。
 
-### 9.4 域重载可靠性
+| 机制 | 作用 |
+|---|---|
+| `_meta` | 每个响应携带 `{tool, action, scene, play_mode, can_write, blockers[]}`；`blockers[].fix` 直接给下一步 |
+| `ref` | 实体可回传引用：`{kind, name, path, instance_id, scene, pass_as}`；`manage_gameobject` 接受 `ref` 代替 `target` |
+| `field_schema` | `get_components` 为每个字段给出 `{type, settable, setter, enum_values}`，不用猜 JSON 形状 |
+| `diagnosis` | `read_console` 对错误做规则匹配：`{matched, likely_cause, fix}` |
+| `key_objects` | `manage_scene.get_hierarchy` 先给相机/Canvas/EventSystem/管理器的 `role + ref` |
+| `next` / `hints` | 响应内直接写“下一步调用哪个工具/动作” |
 
-- 重载前写 `state=reloading` 并关闭监听；重载后 `EditorApplication.update` 持续重试启动，直到编辑器空闲并绑定成功（首次实现只尝试一次，实测会静默停摆，已修）。
-- 长操作（play/stop/refresh/request_compile/package）采用「立即返回 started + `manage_editor.get_operation` 轮询」；MCP 侧封装成一次阻塞调用，断线自动重连并继续轮询。
-- 实测：`manage_editor.refresh` 在 761 ms 内返回 done，并附带控制台摘要。
+### 9.4 项目知识层（不读源码）
 
-### 9.5 脚本执行
+- **`project_map`**：文件夹职责、场景用途与 Build 序号、自定义组件的 `type/script/base/role/summary/fields/used_in_scene/used_count`、命名空间、入口点。第三方路径（`cn.tuanjie.*`、`TJGenerators`、`Plugins`）标为 `third_party` 并从入口点排除。
+- **`inspect_script`**：按 `path` 或 `type` 返回类摘要、基类、序列化字段、公共方法、**private 生命周期方法**（Awake/Start/Update…）以及挂载位置。
+  - 关键修复：本项目脚本是“中文文件名 + 英文类名”，按文件名找不到类；改为遍历 `MonoScript.GetClass()` 建立类型→路径缓存。
+- **`find_usage`**：资源用 `AssetDatabase.GetDependencies` 静态扫描场景/预制体；组件用已加载场景 + 预制体扫描；明确提示 Resources/Addressables 动态加载不可见。
+- **`tool_help`**：按工具/动作返回参数、**可直接复制的 example**、返回结构、常见错误。示例由参数 schema 自动生成，必填项填合理样例（`componentName` → `Transform`，`target` → `Canvas/Button`）。
 
-- `exec_editor_script` 使用编辑器内置 `CSharpCodeProvider`（Mono `mcs`），零外部依赖。
-- 关键修复：必须引用 `Facades/netstandard.dll`，否则生成的代码连 `System.Object` 都无法解析（CS0012）；引用列表只保留核心程序集与 `Assembly-CSharp*`，避免 mono 命令行超长。
-- 限制：同步执行，`Task`/`IEnumerator` 以对象形式返回，不做等待。
+### 9.5 MCP 层
 
-### 9.6 已验证项
+- 6 个 resources：`unity://project/overview`、`/map`、`/tools`、`/hierarchy`、`/console`、`/recipes`。
+- 3 个 prompts：`unity-quickstart`（概览→地图→配方→帮助→操作→验证）、`unity-safe-edit`（写前检查）、`unity-recipes`（按任务选配方）。
+- `unity://project/recipes` 含 7 个已验证配方：改 UI 文本、换材质/贴图、加 UI 按钮、调相机、诊断控制台、定位功能归属、改 Animator。
 
-通过真实 MCP stdio 客户端验证：`tools/list`（13）、`resources/list`（4）、`prompts/list`（2）、`project_overview`、`manage_editor.get_state`、`manage_scene.get_hierarchy`、`manage_gameobject.find/create/set_component_property/delete`、`manage_asset.search/get_info/create(材质 color/metallic)`、`read_console`、`manage_package.list_packages`、`execute_menu_item.get_available_menus`、`manage_gameview.list_resolutions`、`manage_guid`、`manage_screenshot`（返回内联 PNG）、`exec_editor_script`、`manage_editor.refresh`（跨域重载）。
+### 9.6 关键修复记录
 
-### 9.7 已知限制
+| 问题 | 修复 |
+|---|---|
+| 域重载后桥静默停摆 | 重载后 `EditorApplication.update` 持续重试绑定，直到编辑器空闲 |
+| 脚本执行缺 `netstandard` | 引用 `Facades/netstandard.dll`；引用列表只保留核心 + `Assembly-CSharp*` |
+| 生命周期识别为空 | Unity 的 Awake/Start 多为 private，单独用生命周期正则扫描 |
+| 中文文件名找不到类 | `FindScriptPathByType` 遍历 `MonoScript.GetClass()` 并缓存 |
+| `tool_help` 示例填错 | `componentName` 等参数按语义给样例值 |
+| 第三方脚本混入项目统计 | `project_overview` 增加 `project_scripts`；`project_map` 标注 `source` 并过滤命名空间 |
 
-- `manage_gameview` 依赖反射；`selectedIndex` 在不同编辑器版本语义不同，因此输出只给 group 内索引，设置时按宽高匹配。
-- `execute_menu_item.get_available_menus` 只能反射到 `[MenuItem]` 声明的菜单，Unity 内置菜单栏是动态构建的，因此额外内置了一份常用路径。
-- 截图 `view` 仅支持 `current`，其余方向返回 `unsupported_view`。
+### 9.7 已验证项（真实 MCP stdio 客户端）
+
+- `tools/list` = 17；`resources/list` = 6；`prompts/list` = 3。
+- `project_overview`：`project_scripts=29`、`scripts=205`（含 TJGenerators）、场景/包/控制台计数正确。
+- `project_map`：场景 `登录场景:login:0 / 游戏大厅:lobby:1 / 设置_异步窗口:settings:2`；16 个项目组件及字段（另 1 个第三方 `EffectVideoController` 标 `third_party`）。
+- `inspect_script type=UIMenuButton`：`base=MonoBehaviour`、`lifecycle=[Awake,Update]`、16 个字段、11 个方法、4 个场景实例。
+- `find_usage`：`圆角按钮.png` 被 2 个场景静态引用。
+- `tool_help`：`set_component_property` 示例 `componentName=Transform`。
+- `manage_scene.get_hierarchy`：`key_objects=[camera:Main Camera, canvas:Canvas, event_system:EventSystem]`。
+- 编译器：0 error；仅 1 条 Account API 网络警告。
+
+### 9.8 已知限制
+
+- `manage_gameview` 依赖反射；输出 group 内索引，设置按宽高匹配。
+- `execute_menu_item.get_available_menus` 只能反射 `[MenuItem]`，内置菜单栏动态构建，额外内置常用路径。
+- 截图 `view` 仅支持 `current`；GIF/MP4/asset/UI Toolkit 截图未实现。
+- `exec_editor_script` 同步执行，`Task`/`IEnumerator` 以对象返回，不等待。
 - 无输入模拟、原生窗口流、模态框点击、烘焙、自定义工具注册。
+
+---
+
+## 10. 项目现状快照（2026-11-22）
+
+### 10.1 引擎与依赖
+
+| 项 | 值 |
+|---|---|
+| 引擎 | Tuanjie 6000.6.0f1（revision `f7f8ed4d1e24`） |
+| 渲染 | URP 17.6.0，Linear |
+| 后端 | IL2CPP |
+| 输入 | Input System 1.20.0 |
+| UI | uGUI 2.6.0 + TextMeshPro |
+| 其他 | Timeline 6.6、2D 系列 16.0、AI Assistant 2.21-pre、Pipeline 0.9.1-exp、Codely Bridge 1.0.93 |
+| 产品 | `Lament-the-Nameless` / `喵喵喵` |
+
+### 10.2 场景
+
+| Build | 场景 | 用途 |
+|---|---|---|
+| 0 | `Assets/Scenes/登录场景.unity` | 登录/标题动画（8.47s，含故障层） |
+| 1 | `Assets/Scenes/游戏大厅.unity` | 主界面（默认打开） |
+| 2 | `Assets/Scenes/设置_异步窗口.unity` | 设置（Additive 或 Single） |
+| — | `Assets/Scenes/URP2DSceneTemplate.unity` | 模板，未入 Build |
+
+### 10.3 项目脚本（29 个）与类名映射
+
+`Assets/` 下除 TJGenerators/Welcome 外的脚本共 29 个；**文件名可能是中文，类名是英文**：
+
+| 文件 | 类 |
+|---|---|
+| `Assets/全局异步窗口ID.cs` | `WindowDatabase` |
+| `Assets/分辨率控制器/ResolutionAdapt.cs` | `ResolutionAdapt` |
+| `Assets/分辨率控制器/BackgroundFit.cs` | `BackgroundFit` |
+| `Assets/分辨率控制器/ResolutionAdaptToggle.cs` | `ResolutionAdaptToggle` |
+| `Assets/动画/脚本/切场过渡动画控制器.cs` | `LobbyIntro` |
+| `Assets/动画/脚本/动画场景效果器.cs` | `AnimSceneTransition` |
+| `Assets/动画/脚本/文字效果器.cs` | `TextReveal` |
+| `Assets/动画/脚本/游戏主页_4按钮动画控制器.cs` | `UIMenuButton` |
+| `Assets/动画/脚本/缩放适配控制器.cs` | `UIMenuPopIn` |
+| `Assets/动画/脚本/雪花效果控制器.cs` | `GlitchRamp` |
+| `Assets/动画/脚本/异步窗口管理.cs` | `SettingsWindowManager` |
+| `Assets/动画/脚本/SettingsWindow.cs` | `SettingsWindow` |
+| `Assets/动画/脚本/SimpleToast.cs` | `SimpleToast` |
+| `Assets/动画/脚本/SpecialKeyInput.cs` | `SpecialKeyInput` |
+| `Assets/密钥算法/DeviceKey.cs` | `DeviceKey` |
+| `Assets/密钥算法/DeviceKeyPanel.cs` | `DeviceKeyPanel` |
+| `Assets/防逆向工程/运行时/安全核心.cs` | `安全核心` |
+| `Assets/防逆向工程/运行时/密钥仓库.cs` | `密钥仓库` |
+| `Assets/防逆向工程/运行时/加密文件格式.cs` | `加密文件格式` |
+| `Assets/防逆向工程/运行时/加密资源.cs` | `加密资源` |
+| `Assets/防逆向工程/运行时/完整性校验.cs` | `完整性校验` |
+| `Assets/防逆向工程/运行时/反调试检测.cs` | `反调试检测` |
+| `Assets/防逆向工程/运行时/安全日志.cs` | `安全日志` |
+| `Assets/防逆向工程/运行时/安全配置.cs` | `安全配置` |
+| `Assets/防逆向工程/生成/密钥数据.生成.cs` | `密钥数据`（生成） |
+| `Assets/防逆向工程/Editor/密钥生成器.cs` | `密钥生成器` |
+| `Assets/防逆向工程/Editor/资源加密工具.cs` | `防逆向工具窗口` |
+| `Assets/防逆向工程/Editor/构建后处理.cs` | `防逆向构建后处理` |
+| `Assets/防逆向工程/Editor/命令行工具.cs` | `SecurityCli` |
+
+### 10.4 核心系统
+
+- **登录标题卡**：Animator 驱动；`骸歌` 字形 + `白条` 擦除；`文字信息.anim` 控制副标题（RectMask2D 擦除）；`故障.anim` + `GlitchRamp` 驱动故障层。总时长 8.47s，末尾硬切为 0。
+- **大厅菜单**：`UIMenuButton` 在 `Canvas/菜单/开始游戏|继续游戏|存档|设置` 四个实例；字段含 `打开窗口ID`、`窗口是否为跳转`、悬停/按下缩放、文字常态/悬停色。
+- **设置窗口**：`WindowDatabase` 持 `configs`（异步）与 `jumpConfigs`（跳转）；`SettingsWindowManager.打开设置(id, 是否跳转)`：false = Additive + 开窗动画，true = `LoadSceneAsync` Single。`SettingsWindow` 管面板/遮罩/ESC；`SimpleToast` 管提示。
+- **登录密钥**：`SpecialKeyInput` + `DeviceKeyPanel` + `DeviceKey`。
+- **分辨率适配**：`ResolutionAdapt`（PlayerPrefs `resolution_adapt`，默认开）+ `BackgroundFit`（参考 2400×1080 cover，父节点需 `背景裁切` 的 `RectMask2D`）。
+- **防逆向**：LFLN = AES-256-CBC + HMAC-SHA256，头 56 字节；含完整性校验、反调试、安全日志/配置。已知 P0 缺陷见 `CODELY.md`。
+
+### 10.5 资源规模
+
+- 场景 4（3 个入 Build）
+- 项目脚本 29；`Assets` 下 MonoScript 总数 205（多为 TJGenerators）
+- PNG 140（`t:Texture2D` 150，含包内）
+- 着色器文件 21；材质 `t:Material` 17（`Assets` 下 `.mat` 4，其余在包内/内嵌）
+- 动画剪辑 4；ScriptableObject 16；Prefab 0

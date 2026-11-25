@@ -6,21 +6,28 @@ Do this in order before touching anything:
 
 1. Call project_overview. It tells you the engine version, render pipeline, active scene, build scenes,
    package set, asset counts, Play Mode state and console health.
-2. Call list_tools (or read resource unity://project/tools). It is the authoritative catalog of actions and
-   parameters. Do not guess an action name; use the catalog.
-3. Call manage_editor.get_state to confirm play/compile state.
-4. Use manage_scene.get_hierarchy (or manage_gameobject.find / manage_asset.search) to locate the target.
-5. Act with a dedicated tool. Prefer dedicated tools over exec_editor_script.
-6. Verify: read_console for errors, get_state for editor state, manage_screenshot only for visual checks.
+2. Call project_map. It lists folder roles, scenes and their purpose, every custom component with its
+   serialized fields, where each component is used, and the likely entry points. Do not browse the source tree.
+3. Read resource unity://project/recipes. It contains verified call sequences for common requests
+   (change UI text, swap a material, add a button, aim a camera, diagnose the console, find a feature owner).
+4. Call tool_help with a tool name and action before using an unfamiliar action: it returns exact parameters,
+   a copy-pasteable example, the response shape, and common errors.
+5. Call list_tools (or read unity://project/tools) for the authoritative catalog. Do not guess action names.
+6. Call manage_editor.get_state to confirm play/compile state.
+7. Use manage_scene.get_hierarchy (key_objects gives camera/UI/manager refs), manage_gameobject.find or
+   manage_asset.search to locate the target. Responses carry a ref object you can pass back as 'ref'.
+8. Act with a dedicated tool. Prefer dedicated tools over exec_editor_script.
+9. Verify: read_console (its diagnosis[] explains likely causes), get_state, manage_screenshot only for visuals.
 
 Rules that prevent most failures:
 - Paths are project-relative: Assets/Scenes/Main.unity.
-- Scene-object targets accept a name, a hierarchy path (Root/Child), or an instance id string.
+- Scene-object targets accept a name, a hierarchy path (Root/Child), an instance id string, or a 'ref' object.
+- Every response has _meta{play_mode, can_write, blockers}. If can_write is false, read blockers[].fix.
 - play, stop, refresh, request_compile and package changes wait for completion and survive domain reloads.
   If a connection drops, retry; the bridge reconnects.
 - Project-mutating calls are blocked in Play Mode with code "blocked_in_play_mode". Call manage_editor.stop first.
 - After editing scripts or assets, call manage_editor.request_compile (or refresh), then read_console.
-- If a call fails, read its "code" and "suggestion" fields before retrying.`;
+- If a call fails, read its code and suggestion before retrying. For field names, use get_components.field_schema.`;
 
 const SAFE_EDIT = `Before any write to the Unity project, walk this checklist.
 
@@ -68,6 +75,33 @@ export function registerPrompts(server: McpServer): void {
         {
           role: "user",
           content: { type: "text", text: SAFE_EDIT }
+        }
+      ]
+    })
+  );
+
+  server.registerPrompt(
+    "unity-recipes",
+    {
+      title: "Do a common Unity task with a verified recipe",
+      description:
+        "Points the model at the verified task recipes (UI text, material swap, button, camera, console diagnosis, feature owner, animator) and explains how to adapt one to the user's actual objects."
+    },
+    async () => ({
+      messages: [
+        {
+          role: "user",
+          content: {
+            type: "text",
+            text:
+              "Read resource unity://project/recipes first. Pick the recipe whose goal matches the request, " +
+              "then substitute the example paths and targets with real values from project_overview, project_map, " +
+              "manage_scene.get_hierarchy or manage_gameobject.find.\n\n" +
+              "If no recipe matches, build your own from tool_help: ask for one tool + action at a time, send its " +
+              "example, then replace the values. Verify each step before the next one.\n\n" +
+              "Never invent an action name or a serialized field name: both are discoverable (list_tools, " +
+              "get_components.field_schema, inspect_script.fields)."
+          }
         }
       ]
     })

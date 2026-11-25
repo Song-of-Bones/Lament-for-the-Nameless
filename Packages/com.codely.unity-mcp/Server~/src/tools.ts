@@ -266,6 +266,7 @@ export function registerTools(server: McpServer, client: UnityClient): void {
           "Use find before any write."
         ),
         target: z.string().optional().describe("Name, hierarchy path (Root/Child), or instance id."),
+        ref: z.any().optional().describe("A ref object returned by an earlier call (objects[].ref). Replaces target."),
         searchTerm: z.string().optional().describe("Partial, case-insensitive name filter."),
         searchMethod: z.enum(["by_name", "by_path", "by_id"]).optional(),
         searchInactive: z.boolean().optional().describe("Include inactive objects (default true)."),
@@ -450,5 +451,66 @@ export function registerTools(server: McpServer, client: UnityClient): void {
       }
     },
     guarded(async (args) => okResult(await client.call("exec_editor_script", args as Record<string, unknown>, 180_000)))
+  );
+
+  server.registerTool(
+    "project_map",
+    {
+      title: "Project map",
+      description:
+        "Semantic map for understanding a project you have never seen: folder roles, scenes and what each is for, every custom component with its serialized fields and where it is already used, namespaces and entry points. Use this INSTEAD of browsing the source tree. project_overview tells you the shape; project_map tells you what is inside.",
+      inputSchema: {
+        force: z.boolean().optional().describe("Bypass the 30s cache."),
+        maxComponents: z.number().int().min(1).max(200).optional().describe("Custom components to describe (default 40)."),
+        includeFolders: z.boolean().optional(),
+        includePrefabUsage: z.boolean().optional().describe("Also count component usage in prefabs (slower).")
+      }
+    },
+    guarded(async (args) => okResult(await client.callRead("project_map", args as Record<string, unknown>, 120_000)))
+  );
+
+  server.registerTool(
+    "inspect_script",
+    {
+      title: "Inspect a script",
+      description:
+        "Describe one C# script without reading it: declared type, base class, namespace, summary comment, serialized fields with types, public methods, Unity lifecycle methods, and the scene objects/prefabs that attach it. Use it after project_map or a console error names a script.",
+      inputSchema: {
+        path: z.string().optional().describe("Script asset path, e.g. Assets/Scripts/Foo.cs."),
+        type: z.string().optional().describe("Class name, e.g. GlitchRamp."),
+        includeUsage: z.boolean().optional().describe("Also list attachment locations (default true)."),
+        maxPrefabs: z.number().int().min(0).max(500).optional()
+      }
+    },
+    guarded(async (args) => okResult(await client.callRead("inspect_script", args as Record<string, unknown>, 120_000)))
+  );
+
+  server.registerTool(
+    "find_usage",
+    {
+      title: "Find usage",
+      description:
+        "Find what statically references an asset, or where a component type is attached. Uses AssetDatabase dependency data for scenes/prefabs and loaded scenes for objects. Dynamic loading (Resources.Load, Addressables) is invisible, and the response says so.",
+      inputSchema: {
+        path: z.string().optional().describe("Asset or .cs path."),
+        guid: z.string().optional().describe("Asset guid instead of a path."),
+        type: z.string().optional().describe("Component class name.")
+      }
+    },
+    guarded(async (args) => okResult(await client.callRead("find_usage", args as Record<string, unknown>, 120_000)))
+  );
+
+  server.registerTool(
+    "tool_help",
+    {
+      title: "Tool help and examples",
+      description:
+        "Per-action help: exact parameters, a copy-pasteable example, the response shape, and the errors that action commonly returns. Call it before using an action for the first time or after an unexpected error. Omit `tool` to get an index of every tool.",
+      inputSchema: {
+        tool: z.string().optional().describe("Tool type, e.g. manage_gameobject. Omit for the tool index."),
+        action: z.string().optional().describe("Action name, e.g. set_component_property. Omit for the action index.")
+      }
+    },
+    guarded(async (args) => okResult(await client.callRead("tool_help", args as Record<string, unknown>, 60_000)))
   );
 }

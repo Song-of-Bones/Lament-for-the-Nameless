@@ -71,6 +71,8 @@ namespace Codely.UnityMcp
                 ["name"] = go.name,
                 ["path"] = HierarchyPath(go.transform),
                 ["instanceID"] = UnityEngine.EntityId.ToULong(go.GetEntityId()),
+                ["ref"] = AiContract.RefFor(go),
+                ["role"] = AiContract.RoleOf(go),
                 ["active"] = go.activeSelf,
                 ["tag"] = go.tag,
                 ["layer"] = go.layer,
@@ -88,7 +90,16 @@ namespace Codely.UnityMcp
             bool findAll = JsonUtil.Bool(p, "findAll", false);
 
             if (string.IsNullOrEmpty(target) && string.IsNullOrEmpty(term))
-                throw new ToolException("missing_param", "One of 'target' or 'searchTerm' is required.");
+            {
+                // Agents can pass back a ref from a previous response instead of
+                // re-deriving a name or hierarchy path.
+                object refRaw = JsonUtil.Raw(p, "ref", "targetRef");
+                if (refRaw != null && AiContract.TryReadRef(refRaw, out string refPath, out string refId, out _))
+                    target = string.IsNullOrEmpty(refPath) ? refId : refPath;
+            }
+
+            if (string.IsNullOrEmpty(target) && string.IsNullOrEmpty(term))
+                throw new ToolException("missing_param", "One of 'target', 'searchTerm' or 'ref' is required.");
 
             var candidates = Resources.FindObjectsOfTypeAll<GameObject>()
                 .Where(go => go != null && !EditorUtility.IsPersistent(go) && go.scene.IsValid())
@@ -340,10 +351,13 @@ namespace Codely.UnityMcp
                 var entry = new Dictionary<string, object>(StringComparer.Ordinal)
                 {
                     ["type"] = component.GetType().Name,
-                    ["fullType"] = component.GetType().FullName
+                    ["fullType"] = component.GetType().FullName,
+                    ["ref"] = AiContract.RefFor(component),
+                    ["role"] = AiContract.RoleOf(component.gameObject)
                 };
                 if (component is Behaviour behaviour) entry["enabled"] = behaviour.enabled;
                 entry["properties"] = SerializeProperties(component, includeHidden);
+                entry["field_schema"] = AiContract.FieldSchema(component, includeHidden);
                 result.Add(entry);
             }
 
@@ -351,7 +365,9 @@ namespace Codely.UnityMcp
             {
                 ["name"] = go.name,
                 ["path"] = HierarchyPath(go.transform),
-                ["components"] = result
+                ["ref"] = AiContract.RefFor(go),
+                ["components"] = result,
+                ["next"] = "Set a value with manage_gameobject.set_component_property; field_schema[name].type tells you the JSON shape."
             });
         }
 

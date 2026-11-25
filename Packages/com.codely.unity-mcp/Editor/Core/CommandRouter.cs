@@ -17,15 +17,22 @@ namespace Codely.UnityMcp
 
     /// <summary>
     /// Single dispatch table for every bridge command. Keeping it in one place makes the
-    /// wire surface obvious, and the unknown-type error points the caller at list_tools
+    /// wire surface obvious, and the unknown-type error points the caller at tool_help
     /// instead of leaving an agent guessing.
+    ///
+    /// Every response also gets a `_meta` block (play mode, blockers, scene) so an agent
+    /// can decide whether a follow-up write is allowed without a separate state call.
     /// </summary>
     public static class CommandRouter
     {
         public static readonly string[] ToolTypes =
         {
-            "list_tools",
             "project_overview",
+            "project_map",
+            "list_tools",
+            "tool_help",
+            "inspect_script",
+            "find_usage",
             "manage_editor",
             "manage_scene",
             "manage_gameobject",
@@ -47,8 +54,20 @@ namespace Codely.UnityMcp
                 case "list_tools":
                     result = ToolCatalog.Describe();
                     break;
+                case "tool_help":
+                    result = ToolHelpTool.Handle(p);
+                    break;
                 case "project_overview":
                     result = ProjectOverviewTool.Handle(p);
+                    break;
+                case "project_map":
+                    result = ProjectMapTool.Handle(p);
+                    break;
+                case "inspect_script":
+                    result = InspectScriptTool.Handle(p);
+                    break;
+                case "find_usage":
+                    result = FindUsageTool.Handle(p);
                     break;
                 case "manage_editor":
                     result = ManageEditorTool.Handle(p);
@@ -86,17 +105,24 @@ namespace Codely.UnityMcp
                 default:
                     throw new ToolException(
                         "unknown_tool_type",
-                        $"Unknown tool type '{type}'. Call list_tools to get the authoritative list. " +
-                        $"Known types: {string.Join(", ", ToolTypes)}.",
+                        $"Unknown tool type '{type}'. Call list_tools for the authoritative list, or tool_help for usage.",
                         new Dictionary<string, object>(StringComparer.Ordinal)
                         {
                             ["known_types"] = new List<object>(ToolTypes),
-                            ["hint"] = "The first call in a new session should usually be project_overview."
+                            ["hint"] = "Start with project_overview, then project_map, then list_tools."
                         });
             }
 
             message = result.Message;
+            AttachMeta(result.Data, type, JsonUtil.Str(p, "action", "describe"));
             return result.Data;
+        }
+
+        private static void AttachMeta(object data, string tool, string action)
+        {
+            if (!(data is IDictionary<string, object> dict)) return;
+            if (dict.ContainsKey("_meta")) return;
+            dict["_meta"] = AiContract.Meta(tool, action);
         }
     }
 }

@@ -56,6 +56,79 @@ namespace Codely.UnityMcp
         {
             var tools = new List<object>
             {
+                Tool("project_map",
+                    "Semantic map of the project: folders and their roles, scenes and what they are for, custom components with their serialized fields, where each component is already used, namespaces and entry points.",
+                    "Call this instead of browsing the source tree when you need to know what exists and which script owns a feature. project_overview tells you the shape of the project; project_map tells you what is inside it.",
+                    new Dictionary<string, object>(StringComparer.Ordinal)
+                    {
+                        ["describe"] = A("Return the map. Cached for 30 seconds unless force=true.",
+                            P("force", "bool", false, "Bypass the cache.", "false"),
+                            P("maxComponents", "int", false, "Maximum custom components to describe.", "40"),
+                            P("includeFolders", "bool", false, "Include folder roles and file-kind counts.", "true"),
+                            P("includePrefabUsage", "bool", false, "Also count component usage inside prefabs (slower).", "false")),
+                    },
+                    new[]
+                    {
+                        "components[].type is the exact name for manage_gameobject.get_components.",
+                        "components[].fields[].name is the exact serialized field for set_component_property.",
+                        "Only loaded scenes contribute used_in_scene entries."
+                    },
+                    new[] { "{\"type\":\"project_map\",\"params\":{}}" }),
+
+                Tool("tool_help",
+                    "Per-tool/per-action help: exact parameters, a copy-pasteable example, the response shape, and the errors that action commonly returns.",
+                    "Call this before using an action for the first time, or after an unexpected error. It is the fastest way to learn a tool without reading source.",
+                    new Dictionary<string, object>(StringComparer.Ordinal)
+                    {
+                        ["describe"] = A("Return help for one action, or the action index for a tool.",
+                            P("tool", "string", true, "Tool type, e.g. manage_gameobject."),
+                            P("action", "string", false, "Action name, e.g. set_component_property. Omit for the action index.")),
+                    },
+                    new[]
+                    {
+                        "Omit tool to get an index of every tool.",
+                        "The example object can be sent as-is, then edited."
+                    },
+                    new[]
+                    {
+                        "{\"type\":\"tool_help\",\"params\":{\"tool\":\"manage_gameobject\",\"action\":\"set_component_property\"}}"
+                    }),
+
+                Tool("inspect_script",
+                    "Describe one C# script: declared type, base class, namespace, summary comment, serialized fields with types, public methods, Unity lifecycle methods, and where the component is attached.",
+                    "Use after project_map names a component, or when a console error mentions a script. It replaces opening the .cs file.",
+                    new Dictionary<string, object>(StringComparer.Ordinal)
+                    {
+                        ["describe"] = A("Inspect by asset path or by class name.",
+                            P("path", "path", false, "Script asset path, e.g. Assets/动画/脚本/雪花效果控制器.cs."),
+                            P("type", "string", false, "Class name, e.g. GlitchRamp."),
+                            P("includeUsage", "bool", false, "Also list scene objects and prefabs using it.", "true"),
+                            P("maxPrefabs", "int", false, "Prefabs to scan for usage.", "150")),
+                    },
+                    new[]
+                    {
+                        "fields[].name is what set_component_property expects.",
+                        "lifecycle lists which Unity messages the script implements."
+                    },
+                    new[] { "{\"type\":\"inspect_script\",\"params\":{\"type\":\"GlitchRamp\"}}" }),
+
+                Tool("find_usage",
+                    "Find what references an asset, or where a component type is attached, using AssetDatabase dependency data and loaded scenes.",
+                    "Use before deleting/renaming an asset, or when you need an instance of a component to modify.",
+                    new Dictionary<string, object>(StringComparer.Ordinal)
+                    {
+                        ["describe"] = A("Resolve references for an asset path, guid, or component type.",
+                            P("path", "path", false, "Asset or .cs path."),
+                            P("guid", "string", false, "Asset guid instead of path."),
+                            P("type", "string", false, "Component class name.")),
+                    },
+                    new[]
+                    {
+                        "Dynamic loading (Resources.Load, Addressables, string paths) is invisible; a zero is not proof of no usage.",
+                        "Static scan is capped at 300 prefabs per call."
+                    },
+                    new[] { "{\"type\":\"find_usage\",\"params\":{\"path\":\"Assets/美术素材/圆角按钮.png\"}}" }),
+
                 Tool("project_overview",
                     "One-shot description of the Unity project: version, render pipeline, active scene, build scenes, packages, script/asset counts, play state and console health.",
                     "Call this FIRST in any new session, or whenever the user asks 'what is this project / how do I use it'. It replaces guessing from file names.",

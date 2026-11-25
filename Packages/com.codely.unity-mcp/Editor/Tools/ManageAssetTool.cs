@@ -76,7 +76,8 @@ namespace Codely.UnityMcp
                 {
                     ["path"] = path,
                     ["name"] = Path.GetFileNameWithoutExtension(path),
-                    ["type"] = type != null ? type.Name : "unknown"
+                    ["type"] = type != null ? type.Name : "unknown",
+                    ["ref"] = AiContract.RefForAsset(path, type)
                 });
             }
 
@@ -111,6 +112,7 @@ namespace Codely.UnityMcp
                 ["path"] = path,
                 ["name"] = asset.name,
                 ["type"] = asset.GetType().Name,
+                ["ref"] = AiContract.RefForAsset(path, asset.GetType()),
                 ["guid"] = AssetDatabase.AssetPathToGUID(path),
                 ["size_bytes"] = file.Exists ? file.Length : 0,
                 ["last_modified_utc"] = file.Exists ? file.LastWriteTimeUtc.ToString("O", CultureInfo.InvariantCulture) : null,
