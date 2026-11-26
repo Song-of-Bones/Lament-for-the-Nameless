@@ -40,7 +40,7 @@
 | `Assets/Scenes/` | 三个正式场景 + 一个模板 |
 | `Assets/动画/` | `.anim`、`.controller`；`Assets/动画/脚本/` 是**中文文件名、英文类名**的控制器脚本 |
 | `Assets/分辨率控制器/` | `ResolutionAdapt`、`BackgroundFit`、`ResolutionAdaptToggle` |
-| `Assets/防逆向工程/` | 运行时安全核心、密钥仓库、LFLN 加密格式、完整性校验、反调试；`Editor/` 为密钥生成/资源加密/构建后处理；`生成/` 为生成代码 |
+| `Assets/StreamingAssets/` | 目前为空；`EncryptedAssets/` 已随防逆向模块于 2026-11-26 一并移除 |
 | `Assets/密钥算法/` | `DeviceKey`、`DeviceKeyPanel` |
 | `Assets/美术素材/` | 圆角 SDF 精灵、AppIcon、背景等 |
 | `Assets/文字/` | TMP 字体与文本资源 |
@@ -72,10 +72,8 @@
 | `SimpleToast` | `Assets/动画/脚本/SimpleToast.cs` |
 | `SpecialKeyInput` | `Assets/动画/脚本/SpecialKeyInput.cs` |
 | `DeviceKey` / `DeviceKeyPanel` | `Assets/密钥算法/DeviceKey.cs` / `DeviceKeyPanel.cs` |
-| `安全核心` / `密钥仓库` / `加密文件格式` / `加密资源` / `完整性校验` / `反调试检测` / `安全日志` / `安全配置` | `Assets/防逆向工程/运行时/*.cs` |
-| `密钥生成器` / `防逆向工具窗口` / `防逆向构建后处理` / `SecurityCli` | `Assets/防逆向工程/Editor/*.cs` |
 
-完整 29 条映射见 `docs/unity-mcp/bridge-analysis.md` 第 10.3 节。
+完整 29 条映射见 `docs/unity-mcp/bridge-analysis.md` 第 10.3 节（防逆向相关的安全核心、密钥仓库、完整性校验、加密资源等类型已于 2026-11-26 随模块删除，该文档对应条目为历史快照）。
 
 ---
 
@@ -86,7 +84,7 @@
 - **设置窗口**：`WindowDatabase` 持 `configs`（异步）与 `jumpConfigs`（跳转）；`SettingsWindowManager.打开设置(id, 是否跳转)`：false = Additive + 开窗动画，true = `LoadSceneAsync` Single。`SettingsWindow` 管面板/遮罩/ESC；`SimpleToast` 管提示。
 - **登录密钥**：`SpecialKeyInput` + `DeviceKeyPanel` + `DeviceKey`。
 - **分辨率适配**：`ResolutionAdapt` 默认开（PlayerPrefs `resolution_adapt`）；`BackgroundFit` 以 2400×1080 做 cover，父节点必须有 `背景裁切` 的 `RectMask2D`。
-- **防逆向**：LFLN = AES-256-CBC + HMAC-SHA256，头 56 字节。已知 P0 缺陷见 `CODELY.md`，改动前先读。
+- **防逆向**：已于 2026-11-26 整套删除（运行时校验、密钥仓库、LFLN 加密、编辑器加密工具与 `StreamingAssets/EncryptedAssets`）。开发阶段该密钥校验机制稳定性未验证，先不引入；需要时从 git 历史取回。
 
 ---
 
@@ -121,8 +119,8 @@
 - UI 文本统一 TMP；中文缺字时先处理 TMP 中文字体回退（参考 `TMPChineseFont` 技能）。
 - 场景/资源路径使用项目相对路径（`Assets/...`）。
 - 修改场景对象用工具或 `Undo`，不要手改 `.unity` YAML。
-- 不要改 `Library/`、`Temp/`、`Logs/`、`obj/`；不要提交 `Keys/`、`*.apk`、`Library/`。
-- 防逆向模块的密钥、`Keys/` 内容、签名材料**不得**写入日志、注释或提交。
+- 不要改 `Library/`、`Temp/`、`Logs/`、`obj/`；不要提交 `*.apk`、`Library/`。
+- 签名材料（keystore、若再出现 `Keys/`）**不得**写入日志、注释或提交。
 
 ---
 
@@ -152,7 +150,7 @@
 
 - `docs/unity-mcp/bridge-analysis.md` — Cowork Bridge 拆解 + 自研 MCP 实现/验证/限制 + **项目现状快照与 29 条脚本映射**
 - `Packages/com.codely.unity-mcp/README.md` — MCP 安装、客户端配置、工具清单、排错
-- `CODELY.md` — 项目记忆：登录场景动效参数、设置架构、防逆向缺陷、圆角精灵规格
+- `CODELY.md` — 项目记忆：登录场景动效参数、设置架构、圆角精灵规格（防逆向章节已标注为历史记录）
 
 ---
 
