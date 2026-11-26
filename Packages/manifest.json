@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "cn.tuanjie.codely.bridge": "1.0.94",
     "com.unity.2d.animation": "16.0.0",
     "com.unity.2d.aseprite": "6.0.0",
     "com.unity.2d.psdimporter": "15.0.0",
@@ -17,8 +18,11 @@
     "com.unity.learn.iet-framework": "6.0.7",
     "com.unity.pipeline": "0.9.1-exp.1",
     "com.unity.render-pipelines.universal": "17.6.0",
+    "com.unity.sdk.linux-arm64": "1.1.1",
+    "com.unity.sdk.linux-x86_64": "1.1.1",
     "com.unity.test-framework": "1.8.0",
     "com.unity.timeline": "6.6.0",
+    "com.unity.toolchain.linux-x86_64-linux": "1.1.1",
     "com.unity.ugui": "2.6.0",
     "com.unity.visualscripting": "1.9.12",
     "com.unity.modules.accessibility": "1.0.0",
@@ -57,7 +61,7 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
     "com.unity.modules.xr": "1.0.0",
-    "cn.tuanjie.codely.bridge": "1.0.93"
+    "cn.tuanjie.ai.generators": "file:../.codely-cli/extensions/TJGenerators/Packages/cn.tuanjie.ai.generators"
   },
   "scopedRegistries": [
     {

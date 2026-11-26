@@ -90,6 +90,9 @@ namespace Codely.UnityMcp
             // Reflection only sees menus declared with [MenuItem]; much of Unity's built-in
             // menu bar is constructed at runtime, so common paths are seeded explicitly.
             var menus = new HashSet<string>(CommonMenus, StringComparer.Ordinal);
+            // UAC0005: listing menus requires scanning loaded assemblies; broken ones are
+            // skipped by the per-type catch below.
+#pragma warning disable UAC0005
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 Type[] types;
@@ -112,6 +115,7 @@ namespace Codely.UnityMcp
                     catch { /* ignore broken assemblies */ }
                 }
             }
+#pragma warning restore UAC0005
 
             _cachedMenus = menus.OrderBy(m => m, StringComparer.OrdinalIgnoreCase).ToList();
             return _cachedMenus;

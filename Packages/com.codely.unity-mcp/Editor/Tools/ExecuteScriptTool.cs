@@ -161,7 +161,11 @@ namespace Codely.UnityMcp
 
             byte[] bytes = File.ReadAllBytes(outputAssembly);
             try { File.Delete(outputAssembly); } catch { /* temp file, best effort */ }
+            // UAC0020: the snippet is compiled to a temp assembly and must be loaded from
+            // bytes; there is no Unity-side load path for a freshly compiled editor DLL.
+#pragma warning disable UAC0020
             return Assembly.Load(bytes);
+#pragma warning restore UAC0020
         }
 
         private static IEnumerable<string> References()
@@ -176,6 +180,9 @@ namespace Codely.UnityMcp
             // Fixed core surface. The compiler is spawned as a child process, so the
             // reference list becomes command-line arguments: passing every loaded
             // assembly overflows the Windows limit. Project scripts are added below.
+            // UAC0007: these are editor-hosted assemblies whose Location is populated,
+            // and Add() drops any path that does not exist on disk.
+#pragma warning disable UAC0007
             Add(typeof(object).Assembly.Location);
             Add(typeof(Uri).Assembly.Location);
             Add(typeof(Enumerable).Assembly.Location);
@@ -190,7 +197,11 @@ namespace Codely.UnityMcp
             string coreDirectory = Path.GetDirectoryName(typeof(object).Assembly.Location) ?? string.Empty;
             if (coreDirectory.Length > 0)
                 Add(Path.Combine(coreDirectory, "Facades", "netstandard.dll"));
+#pragma warning restore UAC0007
 
+            // UAC0005/UAC0007: scanning loaded assemblies is deliberate; dynamic assemblies
+            // are skipped and Add() tolerates an empty Location.
+#pragma warning disable UAC0005, UAC0007
             int projectAssemblies = 0;
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
@@ -208,6 +219,7 @@ namespace Codely.UnityMcp
                 Add(assembly.Location);
                 projectAssemblies++;
             }
+#pragma warning restore UAC0005, UAC0007
 
             return seen;
         }

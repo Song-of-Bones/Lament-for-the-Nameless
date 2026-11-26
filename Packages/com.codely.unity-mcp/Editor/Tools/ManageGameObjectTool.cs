@@ -754,12 +754,16 @@ namespace Codely.UnityMcp
         internal static Type ResolveType(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) return null;
+            // UAC0005: scanning the live assembly set is intended here; SafeTypes swallows
+            // reflection failures from assemblies that are being unloaded.
+#pragma warning disable UAC0005
             var types = AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(SafeTypes)
                 .Where(t => t != null)
                 .Where(t => string.Equals(t.Name, name, StringComparison.OrdinalIgnoreCase) ||
                             string.Equals(t.FullName, name, StringComparison.OrdinalIgnoreCase))
                 .ToList();
+#pragma warning restore UAC0005
 
             return types.FirstOrDefault(t => t.Namespace != null && t.Namespace.StartsWith("UnityEngine", StringComparison.Ordinal))
                    ?? types.FirstOrDefault(t => t.Namespace != null && t.Namespace.StartsWith("UnityEditor", StringComparison.Ordinal))

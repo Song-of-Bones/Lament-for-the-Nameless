@@ -130,3 +130,6 @@ InitTestScene*.unity*
 
 # Codely Unity MCP server dependencies (dist/ is committed so clients can run it directly)
 /Packages/com.codely.unity-mcp/Server~/node_modules/
+
+# Local archive (kept on disk, never committed)
+/_archive/
