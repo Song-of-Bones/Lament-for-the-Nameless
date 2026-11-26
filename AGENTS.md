@@ -41,7 +41,6 @@
 | `Assets/动画/` | `.anim`、`.controller`；`Assets/动画/脚本/` 是**中文文件名、英文类名**的控制器脚本 |
 | `Assets/分辨率控制器/` | `ResolutionAdapt`、`BackgroundFit`、`ResolutionAdaptToggle` |
 | `Assets/StreamingAssets/` | 目前为空；`EncryptedAssets/` 已随防逆向模块于 2026-11-26 一并移除 |
-| `Assets/密钥算法/` | `DeviceKey`、`DeviceKeyPanel` |
 | `Assets/美术素材/` | 圆角 SDF 精灵、AppIcon、背景等 |
 | `Assets/文字/` | TMP 字体与文本资源 |
 | `Assets/全局异步窗口ID.cs` | `WindowDatabase`（异步窗口 + 跳转窗口两份列表） |
@@ -70,10 +69,8 @@
 | `SettingsWindowManager` | `Assets/动画/脚本/异步窗口管理.cs` |
 | `SettingsWindow` | `Assets/动画/脚本/SettingsWindow.cs` |
 | `SimpleToast` | `Assets/动画/脚本/SimpleToast.cs` |
-| `SpecialKeyInput` | `Assets/动画/脚本/SpecialKeyInput.cs` |
-| `DeviceKey` / `DeviceKeyPanel` | `Assets/密钥算法/DeviceKey.cs` / `DeviceKeyPanel.cs` |
 
-完整 29 条映射见 `docs/unity-mcp/bridge-analysis.md` 第 10.3 节（防逆向相关的安全核心、密钥仓库、完整性校验、加密资源等类型已于 2026-11-26 随模块删除，该文档对应条目为历史快照）。
+完整 29 条映射见 `docs/unity-mcp/bridge-analysis.md` 第 10.3 节（防逆向与密钥相关类型已于 2026-11-26 删除，该文档对应条目为历史快照）。
 
 ---
 
@@ -82,9 +79,8 @@
 - **登录标题卡**：Animator 驱动。`骸歌` 字形 + `白条` 擦除；`文字信息.anim` 控制副标题（RectMask2D 擦除）；`故障.anim` + `GlitchRamp` 驱动故障层。总时长 8.47s，末尾硬切为 0。
 - **大厅菜单**：`UIMenuButton` 在 `Canvas/菜单/开始游戏|继续游戏|存档|设置` 四个实例；字段含 `打开窗口ID`、`窗口是否为跳转`、悬停/按下缩放、文字常态/悬停色。
 - **设置窗口**：`WindowDatabase` 持 `configs`（异步）与 `jumpConfigs`（跳转）；`SettingsWindowManager.打开设置(id, 是否跳转)`：false = Additive + 开窗动画，true = `LoadSceneAsync` Single。`SettingsWindow` 管面板/遮罩/ESC；`SimpleToast` 管提示。
-- **登录密钥**：`SpecialKeyInput` + `DeviceKeyPanel` + `DeviceKey`。
 - **分辨率适配**：`ResolutionAdapt` 默认开（PlayerPrefs `resolution_adapt`）；`BackgroundFit` 以 2400×1080 做 cover，父节点必须有 `背景裁切` 的 `RectMask2D`。
-- **防逆向**：已于 2026-11-26 整套删除（运行时校验、密钥仓库、LFLN 加密、编辑器加密工具与 `StreamingAssets/EncryptedAssets`）。开发阶段该密钥校验机制稳定性未验证，先不引入；需要时从 git 历史取回。
+- **防逆向与密钥**：已于 2026-11-26 整套删除（运行时校验、密钥仓库、LFLN 加密、编辑器加密工具、`StreamingAssets/EncryptedAssets`、`DeviceKey`/`DeviceKeyPanel`/`SpecialKeyInput` 及设置场景中的密钥 UI）。开发阶段稳定性未验证，先不引入；需要时从 git 历史取回。
 
 ---
 
