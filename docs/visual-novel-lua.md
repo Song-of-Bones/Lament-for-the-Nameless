@@ -10,8 +10,8 @@
 4. 所需图片先加入本故事 `resources` 目录。
 5. 保存并预览。LuaEffect 始终阻塞剧情，脚本返回后自动清理并进入 next；无预设时间的业务自动推进不会跳过脚本。
 
-工程示例：`Assets/视觉小说/剧情/Lua演出示例.asset`。
-脚本：`Assets/视觉小说/Lua/spiral_echo.lua.txt`。
+工程示例：`Assets/VisualNovel/Stories/LuaEffectDemo.asset`。
+脚本：`Assets/VisualNovel/Lua/spiral_echo.lua.txt`。
 若不存在示例资产，可运行 `工具 > 视觉小说 > 创建Lua演出示例`。示例是内嵌小色块的工程演出，不下载/生成收费资产，不改正式剧情。
 
 ## 演出 API
@@ -76,5 +76,5 @@ end
 
 - `工具 > 视觉小说 > 运行核心测试` 覆盖实际Lua执行、math/循环、暂停、无限循环抢占、受限globals、错误定位、非法wait、超时和清理。
 - `工具 > 视觉小说 > 运行Lua演出播放测试` 运行示例，验证12个图像、射线安全、暂停、读档重播、推进和清理；报告 `.codely-cli/test-results/visual-novel-lua.txt`，截图 `visual-novel-lua.png`。
-- 官方 DLL、许可证和来源信息在 `Assets/视觉小说/ThirdParty/MoonSharp/`。
+- 官方 DLL、许可证和来源信息在 `Assets/VisualNovel/ThirdParty/MoonSharp/`。
 - 当前仅验证 Unity 6000.6 编辑器内编译和播放。遵守用户要求，不构建；IL2CPP/移动端/AOT/裁剪未验证，不能以编辑器测试代替平台兼容结论。

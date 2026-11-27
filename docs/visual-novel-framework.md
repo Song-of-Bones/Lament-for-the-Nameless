@@ -2,10 +2,34 @@
 
 ## 使用入口
 
-- 正常流程：播放 `Assets/Scenes/游戏大厅.unity`，按现有双击确认交互选择“开始游戏”或“继续游戏”。
-- 独立调试：打开 `Assets/视觉小说/场景/视觉小说运行场景.unity` 后播放。
-- 示例内容：`Assets/视觉小说/剧情/序章示例.asset`。这是工程功能演示，不是 `序章最终稿.docx` 的改编；若项目美术 PNG 仍是 Git LFS 指针，运行场景会使用安全的纯色背景占位。
+- 正常流程：播放 `Assets/Scenes/Lobby.unity`，按现有双击确认交互选择“开始游戏”或“继续游戏”。
+- 独立调试：打开 `Assets/VisualNovel/Scenes/NovelRuntime.unity` 后播放；该场景当前运行正式序章。
+- 正式序章：`Assets/VisualNovel/Stories/Prologue.asset`（对照根目录《序章最终稿.docx》生成，背景与立绘为纯黑占位）。制作方式、抽样规则与缺口见 [prologue-implementation.md](prologue-implementation.md)。
+- 示例内容：`Assets/VisualNovel/Stories/FrameworkDemo.asset` 与 `序章抽样组件示例.asset` 是工程功能演示，不属于正式剧情。
 - 编辑器：`工具 > 视觉小说 > 剧情编辑器`。选择剧情资产后，可编辑剧情属性、新增子资产节点、编辑条件/选项/操作并校验。
+
+## 目录结构（2026-11-27 英文化）
+
+| 路径 | 内容 |
+|---|---|
+| `Assets/Scenes/` | `Login.unity`、`Lobby.unity`、`Settings.unity` |
+| `Assets/Animation/` | 标题/菜单/故障动画；`Scripts/` 控制器，`Shader/`、`Materials/` |
+| `Assets/Art/` | 圆角 UI 精灵、背景、AppIcon（当前仓库中多为 LFS 指针） |
+| `Assets/Fonts/` | SourceHanSans 字体与 TMP SDF |
+| `Assets/ResolutionControl/` | 分辨率适配组件 |
+| `Assets/VisualNovel/` | Data / Playback / UI / Save / Settings / Stories / Scenes / Art / Lua / ThirdParty / Editor / Tests |
+| `Assets/WindowDatabase.cs` | 窗口数据库 |
+
+场景对象名与脚本内序列化字段名仍为中文（改动会断开场景绑定与动画路径），本次只英文化了文件与目录。
+
+## 常用设置
+
+`Assets/Scenes/Settings.unity` 的设置页包含：文字速度、自动播放间隔、音乐/环境音/语音/音效音量、全屏、分辨率自适应、恢复默认。
+
+- 模型：`Assets/VisualNovel/Runtime/Settings/GameSettings.cs`，PlayerPrefs 键 `novel_text_speed`、`novel_auto_delay`、`novel_volume_music/ambient/voice/sound`、`novel_fullscreen`。
+- 绑定：`Assets/VisualNovel/Runtime/UI/NovelSettingsPanel.cs`，挂在设置场景 `Canvas/窗口控制器`。
+- 重建控件：`工具 > 项目 > 生成设置页控件`；检查：`工具 > 项目 > 运行设置页检查`（截图 `.codely-cli/test-results/settings-page.png`）。
+- 剧情音量命令是相对值，最终音量 = 剧情音量 × 玩家设置音量；改设置会立即作用于正在播放的音轨。
 
 ## 操作
 
@@ -21,7 +45,7 @@
 
 ## 模块边界
 
-`Assets/视觉小说/Runtime` 使用独立 `Lament.VisualNovel` 程序集，命名空间为 `Lament.VisualNovel`。
+`Assets/VisualNovel/Runtime` 使用独立 `Lament.VisualNovel` 程序集，命名空间为 `Lament.VisualNovel`。
 
 - 数据：`NovelStoryAsset` 与节点子资产 `NovelNodeAsset`，角色/资源目录、受限条件和变量操作。
 - `NovelSession`：不依赖 MonoBehaviour 生命周期的节点状态机。对话、选择和等待为可存档检查点；每次同步最多执行 1024 个节点，防止错误剧情锁死主线程。
@@ -87,7 +111,8 @@
 
 ## 验证
 
-- `工具 > 视觉小说 > 运行核心测试`：43 项 Unity Test Runner EditMode 测试；报告 `.codely-cli/test-results/visual-novel.xml`。
+- `工具 > 视觉小说 > 运行核心测试`：51 项 Unity Test Runner EditMode 测试（含序章全流程、抽样与结构检查）；报告 `.codely-cli/test-results/visual-novel.xml`。
+- 序章生成与验收：`工具 > 视觉小说 > 由剧本生成序章` → `把序章接入运行场景` → `运行序章界面检查` / `运行大厅到序章集成测试`。说明见 [prologue-implementation.md](prologue-implementation.md)。
 - `工具 > 视觉小说 > 运行节点预览测试`：检查直接进入选中节点、默认变量、资源入口不变，以及停止后编辑场景/播放起始场景设置的恢复；报告 `.codely-cli/test-results/visual-novel-preview.txt`。
 - `工具 > 视觉小说 > 运行演出恢复测试`：通过内存图像/静音音频夹具验证背景、立绘、音乐、语音、一次性音效、暂停/恢复和遮罩读档；不新增正式素材，不消耗生成积分；报告 `.codely-cli/test-results/visual-novel-presentation.txt`。
 - `工具 > 视觉小说 > 运行序章组件测试`：实际验证输入UI射线点击、CG、六角色槽位、背景镜头、环境音渐变/暂停/读档、错位与碎片清理。报告 `.codely-cli/test-results/visual-novel-prologue.txt`。

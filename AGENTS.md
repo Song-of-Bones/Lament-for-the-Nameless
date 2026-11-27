@@ -24,10 +24,10 @@
 
 | index | 场景 | 用途 |
 |---|---|---|
-| 0 | `Assets/Scenes/登录场景.unity` | 登录/标题动画（8.47s 标题卡 + 故障层） |
-| 1 | `Assets/Scenes/游戏大厅.unity` | 主界面（当前默认打开） |
-| 2 | `Assets/Scenes/设置_异步窗口.unity` | 设置（Additive 加载或 Single 跳转） |
-| 3 | `Assets/视觉小说/场景/视觉小说运行场景.unity` | ScriptableObject 剧情运行、分支、存读档与历史 |
+| 0 | `Assets/Scenes/Login.unity` | 登录/标题动画（8.47s 标题卡 + 故障层） |
+| 1 | `Assets/Scenes/Lobby.unity` | 主界面（当前默认打开） |
+| 2 | `Assets/Scenes/Settings.unity` | 设置（Additive 加载或 Single 跳转） |
+| 3 | `Assets/VisualNovel/Scenes/NovelRuntime.unity` | ScriptableObject 剧情运行、分支、存读档与历史 |
 | — | `Assets/Scenes/URP2DSceneTemplate.unity` | 模板，未入 Build |
 
 规模（2026-11-22 实测）：**项目脚本 29**；`Assets` 下 MonoScript 总数 205（多为 TJGenerators）；PNG 140；着色器文件 21；动画剪辑 4；ScriptableObject 16；Prefab 0；材质 `t:Material` 17（`Assets` 下 `.mat` 4）。
@@ -39,14 +39,13 @@
 | 路径 | 内容 |
 |---|---|
 | `Assets/Scenes/` | 登录、大厅、设置三个既有场景；模板位于 `Assets/Settings/Scenes/` |
-| `Assets/视觉小说/` | 新框架：Runtime 数据/执行/表现/存档，Integration 旧页面适配，Editor 剧情工具与验收，Tests/Editor 测试、示例剧情及独立运行场景 |
-| `Assets/动画/` | `.anim`、`.controller`；`Assets/动画/脚本/` 是**中文文件名、英文类名**的控制器脚本 |
-| `Assets/分辨率控制器/` | `ResolutionAdapt`、`BackgroundFit`、`ResolutionAdaptToggle` |
+| `Assets/VisualNovel/` | 视觉小说框架：Runtime（Data/Playback/UI/Save/Settings）、Integration 旧页面适配、Editor 工具与验收、Tests；正式序章 `Stories/Prologue.asset`，源剧本 `Stories/PrologueScript.txt`，占位图 `Art/PureBlack.png` |
+| `Assets/Animation/` | `.anim`、`.controller`、`Shader/`、`Materials/`；`Animation/Scripts/` 为控制器脚本（文件名与类名均为英文，类名见第 3 节） |
+| `Assets/ResolutionControl/` | `ResolutionAdapt`、`BackgroundFit`、`ResolutionAdaptToggle` |
 | `Assets/StreamingAssets/` | 目前为空；`EncryptedAssets/` 已随防逆向模块于 2026-11-26 一并移除 |
-| `Assets/美术素材/` | 圆角 SDF 精灵、AppIcon、背景等 |
-| `Assets/文字/` | TMP 字体与文本资源 |
-| `Assets/全局异步窗口ID.cs` | `WindowDatabase`（异步窗口 + 跳转窗口两份列表） |
-| `Assets/cn.tuanjie.ai.generators/` | TJGenerators 第三方包（独立 asmdef，**不要改**） |
+| `Assets/Art/` | 圆角 SDF 精灵、AppIcon、背景等 |
+| `Assets/Fonts/` | TMP 字体与文本资源 |
+| `Assets/WindowDatabase.cs` | `WindowDatabase`（异步窗口 + 跳转窗口两份列表） |
 | `Assets/Welcome/` | 2D 模板欢迎页（独立 asmdef） |
 | `Assets/Settings/` | URP / Input System 等项目设置资产 |
 | `Packages/com.codely.unity-mcp/` | 自研 MCP 桥（Unity 侧 + `Server~/` Node MCP） |
@@ -57,20 +56,20 @@
 
 ---
 
-## 3. 脚本映射（按类名找文件，别按英文文件名猜）
+## 3. 脚本映射（文件名与类名均为英文）
 
 | 类 | 文件 |
 |---|---|
-| `WindowDatabase` | `Assets/全局异步窗口ID.cs` |
-| `LobbyIntro` | `Assets/动画/脚本/切场过渡动画控制器.cs` |
-| `AnimSceneTransition` | `Assets/动画/脚本/动画场景效果器.cs` |
-| `TextReveal` | `Assets/动画/脚本/文字效果器.cs` |
-| `UIMenuButton` | `Assets/动画/脚本/游戏主页_4按钮动画控制器.cs` |
-| `UIMenuPopIn` | `Assets/动画/脚本/缩放适配控制器.cs` |
-| `GlitchRamp` | `Assets/动画/脚本/雪花效果控制器.cs` |
-| `SettingsWindowManager` | `Assets/动画/脚本/异步窗口管理.cs` |
-| `SettingsWindow` | `Assets/动画/脚本/SettingsWindow.cs` |
-| `SimpleToast` | `Assets/动画/脚本/SimpleToast.cs` |
+| `WindowDatabase` | `Assets/WindowDatabase.cs` |
+| `LobbyIntro` | `Assets/Animation/Scripts/SceneIntroTransition.cs` |
+| `AnimSceneTransition` | `Assets/Animation/Scripts/SceneTransitionEffect.cs` |
+| `TextReveal` | `Assets/Animation/Scripts/TextRevealEffect.cs` |
+| `UIMenuButton` | `Assets/Animation/Scripts/MenuButtonAnimator.cs` |
+| `UIMenuPopIn` | `Assets/Animation/Scripts/MenuPopInAnimator.cs` |
+| `GlitchRamp` | `Assets/Animation/Scripts/GlitchRampController.cs` |
+| `SettingsWindowManager` | `Assets/Animation/Scripts/AsyncWindowManager.cs` |
+| `SettingsWindow` | `Assets/Animation/Scripts/SettingsWindow.cs` |
+| `SimpleToast` | `Assets/Animation/Scripts/SimpleToast.cs` |
 
 完整 29 条映射见 `docs/unity-mcp/bridge-analysis.md` 第 10.3 节（防逆向与密钥相关类型已于 2026-11-26 删除，该文档对应条目为历史快照）。
 
@@ -131,7 +130,7 @@
 5. **域重载**：`refresh` / `request_compile` / 装包会触发重载并断开 MCP 连接；客户端会自动重连，长操作轮询完成标记，不要重复发起。
 6. **登录场景有一个空的 `TextReveal` 根物体**，每次播放报“未指定文本组件”警告，属已知噪音。
 7. 设置场景既可 Additive 也可 Single，判断依据是 `打开设置(id, bool)` 的第二个参数，不要假设只有一种。
-8. **`inspect_script` 按类名解析**：本项目中文文件名不能用文件名搜索，工具内部走 `MonoScript.GetClass()` 缓存；新增脚本后若类型找不到，先让编辑器编译再查。
+8. **`inspect_script` 按类名解析**：脚本文件名已英文化（目录为 `Assets/Animation/Scripts` 等），类名保持不变；工具内部走 `MonoScript.GetClass()` 缓存，新增脚本后若类型找不到，先让编辑器编译再查。
 
 ---
 

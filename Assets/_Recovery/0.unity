@@ -2002,7 +2002,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WindowDatabase
   configs:
   - id: 4
-    sceneName: "\u8BBE\u7F6E_\u5F02\u6B65\u7A97\u53E3"
+    sceneName: Settings
   - id: 
     sceneName: 
   - id: 
@@ -3183,7 +3183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0b2c5055c46eb8c492e95a654a9de84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NovelEntryPoint
-  runtimeScene: "\u89C6\u89C9\u5C0F\u8BF4\u8FD0\u884C\u573A\u666F"
+  runtimeScene: NovelRuntime
 --- !u!1 &2008748025
 GameObject:
   m_ObjectHideFlags: 0

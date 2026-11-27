@@ -25,7 +25,7 @@
 - **AudioVolume**：`audioBus` 选择 Music/Ambient/Voice/Sound，`volume` 0～1；`seconds` 和 easing 控制音量渐变，暂停冻结渐变。现阶段环境声保持播放，与既有BGM一致；语音暂停由表现控制器负责。
 - **Distortion**：以当前背景的临时重影产生偏色错位；`color` 控制色调/透明度，`shakeStrength` 控制位移，`shakeFrequency` 控制变化频率，`seconds` 控制时长，结束/读档清理。它不是完整画面后处理，也不是镜面碎裂。
 - **Shatter**：把当前背景快照分成4×4矩形块，位移、旋转并淡出；不吞鼠标事件。非阻塞 Shatter 后接一个立即 Background 切换，可从旧快照碎片中露出新场景。不是不规则玻璃裂纹算法，不捕获整个Canvas。转场中暂停冻结；结束/读档清理，图片仍从资源引用获取，不另生成图像。
-- **SampleFlags 节点**：`sampleVariables` 为不重复的已声明布尔变量 ID；`sampleCount=2`。首次进入时不放回抽样，其余标记置 false，记录已抽样节点 ID；同局回到节点或存档恢复不重抽，新游戏重置。示例 `Assets/视觉小说/剧情/序章抽样组件示例.asset` 连接五个条件调查、第六具必经、两件抽中信物+032手环+什么都不拿四个选项，并将结果写入 `souvenir`。它仅验证组件，不替代正式剧本文字。
+- **SampleFlags 节点**：`sampleVariables` 为不重复的已声明布尔变量 ID；`sampleCount=2`。首次进入时不放回抽样，其余标记置 false，记录已抽样节点 ID；同局回到节点或存档恢复不重抽，新游戏重置。示例 `Assets/VisualNovel/Stories/SamplingDemo.asset` 连接五个条件调查、第六具必经、两件抽中信物+032手环+什么都不拿四个选项，并将结果写入 `souvenir`。它仅验证组件，不替代正式剧本文字。
 - 所有旧枚举数值保留，新增类型仅追加。新存档字段缺失时恢复默认音量/镜头；继续沿用最终画面状态恢复，不重演短暂闪回、震动、重影。
 
 ## 尚缺而不能默认为完成
