@@ -1,0 +1,25 @@
+-- Custom spiral echoes; no preset command or CLR access is required.
+-- Register a sprite as resource ID "lua_demo" in the story.
+local ghosts = {}
+for i = 1, 12 do
+    local h = fx.image("lua_demo")
+    fx.set(h, "width", 90)
+    fx.set(h, "height", 90)
+    ghosts[i] = h
+end
+for frame = 0, 90 do
+    local t = frame / 90
+    for i, h in ipairs(ghosts) do
+        local angle = i * math.pi / 6 + t * math.pi * 3
+        local radius = 40 + 260 * t
+        fx.set(h, "x", math.cos(angle) * radius)
+        fx.set(h, "y", math.sin(angle) * radius)
+        fx.set(h, "rotation", angle * 180 / math.pi)
+        fx.set(h, "alpha", math.sin(t * math.pi))
+        fx.set(h, "r", 0.5 + 0.5 * math.sin(angle))
+        fx.set(h, "g", 0.8)
+        fx.set(h, "b", 1)
+    end
+    fx.wait(1 / 30)
+end
+-- Returning clears every temporary image automatically.

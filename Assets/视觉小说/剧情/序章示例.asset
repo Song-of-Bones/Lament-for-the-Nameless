@@ -1,0 +1,387 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6623370520336882609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: intro
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: intro
+  type: 0
+  next: {fileID: 6889480534323057626}
+  characterId: guide
+  text: "\u8FD9\u662F\u4E00\u6BB5\u6846\u67B6\u529F\u80FD\u6F14\u793A\uFF0C\u5E76\u975E\u6B63\u5F0F\u5267\u672C\u3002\u70B9\u51FB\u6B63\u6587\u6216\u6309\u7A7A\u683C\u7EE7\u7EED\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1
+--- !u!114 &-2791103630820210234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: final
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: final
+  type: 0
+  next: {fileID: -657472031246179527}
+  characterId: guide
+  text: "\u6F14\u793A\u5373\u5C06\u7ED3\u675F\u5E76\u8FD4\u56DE\u5927\u5385\u3002\u8FD4\u56DE\u524D\uFF0C\u4F60\u53EF\u4EE5\u4FDD\u5B58\u5230\u4EFB\u4E00\u69FD\u4F4D\uFF0C\u518D\u4ECE\u5927\u5385\u7EE7\u7EED\u6E38\u620F\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1
+--- !u!114 &-657472031246179527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: end
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: end
+  type: 6
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977028afa5d786fbcbc079adccadee71, type: 3}
+  m_Name: "\u5E8F\u7AE0\u793A\u4F8B"
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelStoryAsset
+  storyId: framework-demo-prologue
+  displayName: "\u5E8F\u7AE0 \xB7 \u6846\u67B6\u529F\u80FD\u6F14\u793A"
+  schemaVersion: 1
+  entryNode: {fileID: -6623370520336882609}
+  nodes:
+  - {fileID: -6623370520336882609}
+  - {fileID: 6889480534323057626}
+  - {fileID: 3494139044111278045}
+  - {fileID: 4809359896184341023}
+  - {fileID: 4071463887052521973}
+  - {fileID: 1282858971830059217}
+  - {fileID: -2791103630820210234}
+  - {fileID: -657472031246179527}
+  variables:
+  - id: route
+    initial:
+      type: 1
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  characters:
+  - id: guide
+    displayName: "\u5F15\u5BFC"
+    nameColor: {r: 0.75, g: 0.85, b: 1, a: 1}
+    portrait: {fileID: 0}
+  resources: []
+--- !u!114 &1282858971830059217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: route-b
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: route-b
+  type: 0
+  next: {fileID: -2791103630820210234}
+  characterId: guide
+  text: "\u4F60\u9009\u62E9\u4E86\u8DEF\u7EBF B\u3002\u53D8\u91CF route \u7684\u503C\u4E3A 2\uFF1B\u8FD9\u91CC\u53EF\u4EE5\u9A8C\u8BC1\u53E6\u4E00\u6761\u5206\u652F\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1
+--- !u!114 &3494139044111278045
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: choice
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: choice
+  type: 1
+  next: {fileID: 0}
+  characterId: 
+  text: "\u8BF7\u9009\u62E9\u6F14\u793A\u8DEF\u7EBF"
+  voice: {fileID: 0}
+  choices:
+  - text: "\u8DEF\u7EBF A"
+    conditional: 0
+    condition:
+      variable: 
+      comparison: 0
+      value:
+        type: 0
+        boolean: 0
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: route
+      operation: 0
+      value:
+        type: 1
+        boolean: 0
+        integer: 1
+        number: 0
+        text: 
+    target: {fileID: 4809359896184341023}
+  - text: "\u8DEF\u7EBF B"
+    conditional: 0
+    condition:
+      variable: 
+      comparison: 0
+      value:
+        type: 0
+        boolean: 0
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: route
+      operation: 0
+      value:
+        type: 1
+        boolean: 0
+        integer: 2
+        number: 0
+        text: 
+    target: {fileID: 4809359896184341023}
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1
+--- !u!114 &4071463887052521973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: route-a
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: route-a
+  type: 0
+  next: {fileID: -2791103630820210234}
+  characterId: guide
+  text: "\u4F60\u9009\u62E9\u4E86\u8DEF\u7EBF A\u3002\u53D8\u91CF route \u7684\u503C\u4E3A 1\uFF1B\u8FD9\u91CC\u53EF\u4EE5\u9A8C\u8BC1\u5206\u652F\u5B58\u6863\u6062\u590D\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1
+--- !u!114 &4809359896184341023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: branch
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: branch
+  type: 2
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: route
+    comparison: 0
+    value:
+      type: 1
+      boolean: 0
+      integer: 1
+      number: 0
+      text: 
+  whenTrue: {fileID: 4071463887052521973}
+  whenFalse: {fileID: 1282858971830059217}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1
+--- !u!114 &6889480534323057626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: instructions
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: instructions
+  type: 0
+  next: {fileID: 3494139044111278045}
+  characterId: guide
+  text: "\u4F60\u53EF\u4EE5\u968F\u65F6\u4FDD\u5B58\u8FDB\u5EA6\u3001\u6253\u5F00\u5386\u53F2\uFF0C\u6216\u542F\u7528\u81EA\u52A8\u64AD\u653E\u3002\u63A5\u4E0B\u6765\u8BF7\u9009\u62E9\u4E00\u6761\u8DEF\u7EBF\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  returnToLobby: 1

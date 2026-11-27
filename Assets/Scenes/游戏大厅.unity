@@ -653,7 +653,19 @@ MonoBehaviour:
   "\u786E\u8BA4\u540E\u83DC\u5355\u9000\u573A": 0
   "\u70B9\u51FB\u7ED3\u675F":
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1960441023}
+        m_TargetAssemblyTypeName: NovelEntryPoint, Assembly-CSharp
+        m_MethodName: ContinueGame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   "\u6253\u5F00\u7A97\u53E3ID": 
   "\u7A97\u53E3\u662F\u5426\u4E3A\u8DF3\u8F6C": 0
   "\u8FC7\u6E21\u901F\u5EA6": 14
@@ -2193,7 +2205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3013,6 +3025,7 @@ GameObject:
   - component: {fileID: 1960441022}
   - component: {fileID: 1960441021}
   - component: {fileID: 1960441020}
+  - component: {fileID: 1960441023}
   m_Layer: 0
   m_Name: "\u5F00\u59CB\u6E38\u620F"
   m_TagString: Untagged
@@ -3086,6 +3099,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1960441023}
+        m_TargetAssemblyTypeName: NovelEntryPoint, Assembly-CSharp
+        m_MethodName: StartNewGame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   "\u6253\u5F00\u7A97\u53E3ID": 
   "\u7A97\u53E3\u662F\u5426\u4E3A\u8DF3\u8F6C": 0
   "\u8FC7\u6E21\u901F\u5EA6": 14
@@ -3146,6 +3171,19 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1960441023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1960441018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0b2c5055c46eb8c492e95a654a9de84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NovelEntryPoint
+  runtimeScene: "\u89C6\u89C9\u5C0F\u8BF4\u8FD0\u884C\u573A\u666F"
 --- !u!1 &2008748025
 GameObject:
   m_ObjectHideFlags: 0

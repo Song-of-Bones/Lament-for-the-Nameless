@@ -1,0 +1,6 @@
+{
+  "name": "Lament.VisualNovel",
+  "rootNamespace": "Lament.VisualNovel",
+  "references": ["Unity.TextMeshPro", "Unity.ugui", "Unity.InputSystem"],
+  "autoReferenced": true
+}

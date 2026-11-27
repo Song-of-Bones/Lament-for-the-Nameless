@@ -1,0 +1,6 @@
+{
+  "name": "Lament.VisualNovel.Tests",
+  "references": ["Lament.VisualNovel"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

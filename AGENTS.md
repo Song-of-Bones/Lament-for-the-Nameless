@@ -27,6 +27,7 @@
 | 0 | `Assets/Scenes/登录场景.unity` | 登录/标题动画（8.47s 标题卡 + 故障层） |
 | 1 | `Assets/Scenes/游戏大厅.unity` | 主界面（当前默认打开） |
 | 2 | `Assets/Scenes/设置_异步窗口.unity` | 设置（Additive 加载或 Single 跳转） |
+| 3 | `Assets/视觉小说/场景/视觉小说运行场景.unity` | ScriptableObject 剧情运行、分支、存读档与历史 |
 | — | `Assets/Scenes/URP2DSceneTemplate.unity` | 模板，未入 Build |
 
 规模（2026-11-22 实测）：**项目脚本 29**；`Assets` 下 MonoScript 总数 205（多为 TJGenerators）；PNG 140；着色器文件 21；动画剪辑 4；ScriptableObject 16；Prefab 0；材质 `t:Material` 17（`Assets` 下 `.mat` 4）。
@@ -37,7 +38,8 @@
 
 | 路径 | 内容 |
 |---|---|
-| `Assets/Scenes/` | 三个正式场景 + 一个模板 |
+| `Assets/Scenes/` | 登录、大厅、设置三个既有场景；模板位于 `Assets/Settings/Scenes/` |
+| `Assets/视觉小说/` | 新框架：Runtime 数据/执行/表现/存档，Integration 旧页面适配，Editor 剧情工具与验收，Tests/Editor 测试、示例剧情及独立运行场景 |
 | `Assets/动画/` | `.anim`、`.controller`；`Assets/动画/脚本/` 是**中文文件名、英文类名**的控制器脚本 |
 | `Assets/分辨率控制器/` | `ResolutionAdapt`、`BackgroundFit`、`ResolutionAdaptToggle` |
 | `Assets/StreamingAssets/` | 目前为空；`EncryptedAssets/` 已随防逆向模块于 2026-11-26 一并移除 |

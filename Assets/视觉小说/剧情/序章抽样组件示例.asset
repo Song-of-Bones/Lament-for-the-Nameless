@@ -1,0 +1,1103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-8384340933108909603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: body_6
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: body_6
+  type: 0
+  next: {fileID: 3038124578221977067}
+  characterId: 
+  text: "\u7EC4\u4EF6\u793A\u4F8B\uFF1A\u7B2C\u516D\u5177\u5FC5\u5B9A\u51FA\u73B0\uFF0C\u5BF9\u5E94032\u53F7\u91D1\u5C5E\u624B\u73AF\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &-5287517788562365450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: body_1
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: body_1
+  type: 0
+  next: {fileID: -1690941463054391759}
+  characterId: 
+  text: "\u7EC4\u4EF6\u793A\u4F8B\uFF1A\u8FD9\u6B21\u51FA\u73B0\u7684\u8C03\u67E5\u5BF9\u8C61\u5BF9\u5E94\u3010\u5E03\u5236\u62A4\u8EAB\u7B26\u3011\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &-4954208958331504554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: body_2
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: body_2
+  type: 0
+  next: {fileID: 196037324542432934}
+  characterId: 
+  text: "\u7EC4\u4EF6\u793A\u4F8B\uFF1A\u8FD9\u6B21\u51FA\u73B0\u7684\u8C03\u67E5\u5BF9\u8C61\u5BF9\u5E94\u3010\u9AB8\u9AA8\u540A\u5760\u3011\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &-3557948251374770776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: end
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: end
+  type: 6
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 0
+--- !u!114 &-3361053428374189575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: body_3
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: body_3
+  type: 0
+  next: {fileID: 7972969334531467611}
+  characterId: 
+  text: "\u7EC4\u4EF6\u793A\u4F8B\uFF1A\u8FD9\u6B21\u51FA\u73B0\u7684\u8C03\u67E5\u5BF9\u8C61\u5BF9\u5E94\u3010\u6218\u9774\u4EFF\u54C1\u3011\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &-2939656339783834494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: body_5
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: body_5
+  type: 0
+  next: {fileID: -8384340933108909603}
+  characterId: 
+  text: "\u7EC4\u4EF6\u793A\u4F8B\uFF1A\u8FD9\u6B21\u51FA\u73B0\u7684\u8C03\u67E5\u5BF9\u8C61\u5BF9\u5E94\u3010\u7814\u7A76\u7B14\u8BB0\u672C\u3011\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &-1690941463054391759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: check_2
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: check_2
+  type: 2
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: inspect_2
+    comparison: 0
+    value:
+      type: 0
+      boolean: 1
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: -4954208958331504554}
+  whenFalse: {fileID: 196037324542432934}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &-1061448200454055512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: check_1
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: check_1
+  type: 2
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: inspect_1
+    comparison: 0
+    value:
+      type: 0
+      boolean: 1
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: -5287517788562365450}
+  whenFalse: {fileID: -1690941463054391759}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 977028afa5d786fbcbc079adccadee71, type: 3}
+  m_Name: "\u5E8F\u7AE0\u62BD\u6837\u7EC4\u4EF6\u793A\u4F8B"
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelStoryAsset
+  storyId: prologue-sampling-components
+  displayName: "\u5E8F\u7AE0\u7EC4\u4EF6\u793A\u4F8B\uFF08\u975E\u6B63\u5F0F\u6B63\u6587\uFF09"
+  schemaVersion: 1
+  entryNode: {fileID: 5055863489140868458}
+  nodes:
+  - {fileID: 5055863489140868458}
+  - {fileID: 5884162464513202703}
+  - {fileID: -1061448200454055512}
+  - {fileID: -5287517788562365450}
+  - {fileID: -1690941463054391759}
+  - {fileID: -4954208958331504554}
+  - {fileID: 196037324542432934}
+  - {fileID: -3361053428374189575}
+  - {fileID: 7972969334531467611}
+  - {fileID: 7040032915552852843}
+  - {fileID: 3617888394229802405}
+  - {fileID: -2939656339783834494}
+  - {fileID: -8384340933108909603}
+  - {fileID: 3038124578221977067}
+  - {fileID: 6983792733112232711}
+  - {fileID: -3557948251374770776}
+  variables:
+  - id: name
+    initial:
+      type: 3
+      boolean: 0
+      integer: 0
+      number: 0
+      text: "\u52D2\u7279"
+  - id: souvenir
+    initial:
+      type: 3
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  - id: inspect_1
+    initial:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  - id: inspect_2
+    initial:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  - id: inspect_3
+    initial:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  - id: inspect_4
+    initial:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  - id: inspect_5
+    initial:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  characters: []
+  resources: []
+--- !u!114 &196037324542432934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: check_3
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: check_3
+  type: 2
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: inspect_3
+    comparison: 0
+    value:
+      type: 0
+      boolean: 1
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: -3361053428374189575}
+  whenFalse: {fileID: 7972969334531467611}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &3038124578221977067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: souvenir_choice
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: souvenir_choice
+  type: 1
+  next: {fileID: 0}
+  characterId: 
+  text: "\u53EA\u663E\u793A\u672C\u5C40\u62BD\u4E2D\u7684\u4E24\u4EF6\u4FE1\u7269\u3001032\u53F7\u624B\u73AF\u53CA\u4EC0\u4E48\u90FD\u4E0D\u62FF\u3002"
+  voice: {fileID: 0}
+  choices:
+  - text: "\u5E03\u5236\u62A4\u8EAB\u7B26"
+    conditional: 1
+    condition:
+      variable: inspect_1
+      comparison: 0
+      value:
+        type: 0
+        boolean: 1
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: souvenir
+      operation: 0
+      value:
+        type: 3
+        boolean: 0
+        integer: 0
+        number: 0
+        text: "\u5E03\u5236\u62A4\u8EAB\u7B26"
+    target: {fileID: 6983792733112232711}
+  - text: "\u9AB8\u9AA8\u540A\u5760"
+    conditional: 1
+    condition:
+      variable: inspect_2
+      comparison: 0
+      value:
+        type: 0
+        boolean: 1
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: souvenir
+      operation: 0
+      value:
+        type: 3
+        boolean: 0
+        integer: 0
+        number: 0
+        text: "\u9AB8\u9AA8\u540A\u5760"
+    target: {fileID: 6983792733112232711}
+  - text: "\u6218\u9774\u4EFF\u54C1"
+    conditional: 1
+    condition:
+      variable: inspect_3
+      comparison: 0
+      value:
+        type: 0
+        boolean: 1
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: souvenir
+      operation: 0
+      value:
+        type: 3
+        boolean: 0
+        integer: 0
+        number: 0
+        text: "\u6218\u9774\u4EFF\u54C1"
+    target: {fileID: 6983792733112232711}
+  - text: "\u54D1\u94DC\u94C3"
+    conditional: 1
+    condition:
+      variable: inspect_4
+      comparison: 0
+      value:
+        type: 0
+        boolean: 1
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: souvenir
+      operation: 0
+      value:
+        type: 3
+        boolean: 0
+        integer: 0
+        number: 0
+        text: "\u54D1\u94DC\u94C3"
+    target: {fileID: 6983792733112232711}
+  - text: "\u7814\u7A76\u7B14\u8BB0\u672C"
+    conditional: 1
+    condition:
+      variable: inspect_5
+      comparison: 0
+      value:
+        type: 0
+        boolean: 1
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: souvenir
+      operation: 0
+      value:
+        type: 3
+        boolean: 0
+        integer: 0
+        number: 0
+        text: "\u7814\u7A76\u7B14\u8BB0\u672C"
+    target: {fileID: 6983792733112232711}
+  - text: "032\u53F7\u91D1\u5C5E\u624B\u73AF"
+    conditional: 0
+    condition:
+      variable: 
+      comparison: 0
+      value:
+        type: 0
+        boolean: 0
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: souvenir
+      operation: 0
+      value:
+        type: 3
+        boolean: 0
+        integer: 0
+        number: 0
+        text: "032\u53F7\u91D1\u5C5E\u624B\u73AF"
+    target: {fileID: 6983792733112232711}
+  - text: "\u4EC0\u4E48\u90FD\u4E0D\u62FF"
+    conditional: 0
+    condition:
+      variable: 
+      comparison: 0
+      value:
+        type: 0
+        boolean: 0
+        integer: 0
+        number: 0
+        text: 
+    operations:
+    - variable: souvenir
+      operation: 0
+      value:
+        type: 3
+        boolean: 0
+        integer: 0
+        number: 0
+        text: "\u4EC0\u4E48\u90FD\u4E0D\u62FF"
+    target: {fileID: 6983792733112232711}
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &3617888394229802405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: check_5
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: check_5
+  type: 2
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: inspect_5
+    comparison: 0
+    value:
+      type: 0
+      boolean: 1
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: -2939656339783834494}
+  whenFalse: {fileID: -8384340933108909603}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &5055863489140868458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: name
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: name
+  type: 7
+  next: {fileID: 5884162464513202703}
+  characterId: 
+  text: "\u7EC4\u4EF6\u793A\u4F8B\uFF1A\u8BF7\u8F93\u5165\u89D2\u8272\u79F0\u547C\uFF08\u4E0D\u4FEE\u6539\u6B63\u5F0F\u5267\u672C\uFF09"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: name
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &5884162464513202703
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: sample
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: sample
+  type: 8
+  next: {fileID: -1061448200454055512}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables:
+  - inspect_1
+  - inspect_2
+  - inspect_3
+  - inspect_4
+  - inspect_5
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &6983792733112232711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: result
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: result
+  type: 0
+  next: {fileID: -3557948251374770776}
+  characterId: 
+  text: "{name}\u9009\u62E9\u4E86\u3010{souvenir}\u3011\u3002\u672C\u793A\u4F8B\u4EC5\u9A8C\u8BC1\u62BD\u6837\u4E0E\u7B5B\u9009\uFF0C\u4E0D\u66FF\u4EE3\u6B63\u5F0F\u5E8F\u7AE0\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &7040032915552852843
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: body_4
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: body_4
+  type: 0
+  next: {fileID: 3617888394229802405}
+  characterId: 
+  text: "\u7EC4\u4EF6\u793A\u4F8B\uFF1A\u8FD9\u6B21\u51FA\u73B0\u7684\u8C03\u67E5\u5BF9\u8C61\u5BF9\u5E94\u3010\u54D1\u94DC\u94C3\u3011\u3002"
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: 
+    comparison: 0
+    value:
+      type: 0
+      boolean: 0
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 0}
+  whenFalse: {fileID: 0}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
+--- !u!114 &7972969334531467611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: acf24a3c9b20ab597b449bfabd1aab81, type: 3}
+  m_Name: check_4
+  m_EditorClassIdentifier: Lament.VisualNovel::Lament.VisualNovel.NovelNodeAsset
+  nodeId: check_4
+  type: 2
+  next: {fileID: 0}
+  characterId: 
+  text: 
+  voice: {fileID: 0}
+  choices: []
+  condition:
+    variable: inspect_4
+    comparison: 0
+    value:
+      type: 0
+      boolean: 1
+      integer: 0
+      number: 0
+      text: 
+  whenTrue: {fileID: 7040032915552852843}
+  whenFalse: {fileID: 3617888394229802405}
+  operations: []
+  seconds: 0
+  waitForInput: 0
+  command: 0
+  resourceId: 
+  expressionId: 
+  portraitSlot: 1
+  color: {r: 0, g: 0, b: 0, a: 1}
+  waitForCompletion: 0
+  easing: 1
+  pose:
+    position: {x: 0, y: 0}
+    scale: {x: 1, y: 1}
+    rotation: 0
+    alpha: 1
+  shakeStrength: 18
+  shakeFrequency: 24
+  inputVariable: 
+  inputMaxLength: 16
+  volume: 1
+  audioBus: 0
+  sampleVariables: []
+  sampleCount: 2
+  returnToLobby: 1
