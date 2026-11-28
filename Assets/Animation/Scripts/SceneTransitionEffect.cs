@@ -39,6 +39,9 @@ public class AnimSceneTransition : MonoBehaviour
     [Tooltip("等待期间点击鼠标或按任意键可立即转场")]
     [SerializeField] private bool 允许跳过 = true;
 
+    [Tooltip("开始后多少秒才允许跳过，避免开场误触打断帧动画")]
+    [SerializeField, Min(0f)] private float 跳过需等待 = 1.5f;
+
     [Header("动画设置")]
     [Tooltip("计时方式为「播放动画片段」时播放的 .anim 文件")]
     [SerializeField] private AnimationClip 帧动画文件;
@@ -68,7 +71,13 @@ public class AnimSceneTransition : MonoBehaviour
     [SerializeField] private bool 循环播放 = false;
 
     [Header("场景切换")]
-    [Tooltip("动画播完后要跳转的场景（需已加入 Build Settings）")]
+    [Tooltip("交给场景流程管理器：只把「流程 ID」发出去，跳哪个场景由 WindowDatabase 的跳转列表决定")]
+    [SerializeField] private bool 交给流程管理器 = true;
+
+    [Tooltip("流程 ID，对应 WindowDatabase「跳转窗口配置」里的 id；场景连接图里拖线会自动维护")]
+    [SerializeField] private string 流程ID = "";
+
+    [Tooltip("未启用流程管理器时才会用到：动画播完后跳转到的场景（需已加入 Build Settings）")]
     [SerializeField] private string 目标场景 = "";
 
     [Tooltip("缓出缓入=淡出到黑再从黑淡入；缓出=只淡出后切换；缓入=切换后从黑淡入；直出直入=立即切换")]
@@ -86,6 +95,12 @@ public class AnimSceneTransition : MonoBehaviour
     [Tooltip("勾选后使用异步加载，避免大场景卡顿")]
     [SerializeField] private bool 异步加载 = true;
 
+    [Tooltip("动画播放期间就在后台把目标场景加载好（不激活），播完直接切换；不改变动画表现")]
+    [SerializeField] private bool 提前预加载 = true;
+
+    [Tooltip("等待动画的兜底上限（秒），0 表示不限制；动画被冻结时到点强制转场")]
+    [SerializeField, Min(0f)] private float 最多等待 = 0f;
+
     [Header("事件")]
     [SerializeField] private UnityEvent 开始播放;
     [SerializeField] private UnityEvent 播放结束;
@@ -95,6 +110,12 @@ public class AnimSceneTransition : MonoBehaviour
     private AnimationClipPlayable _clipPlayable;
     private bool _running;
     private bool _skipRequested;
+    private AsyncOperation _preload;
+    private float _startedAt;
+    private SceneFlowManager _manager;
+
+    private bool UseFlowManager => 交给流程管理器 && !string.IsNullOrEmpty(流程ID);
+    private SceneFlowManager Manager => _manager != null ? _manager : (_manager = SceneFlowManager.Find());
 
     /// <summary>开始播放并等待转场；重复调用会被忽略。</summary>
     public void PlayNow()
@@ -106,8 +127,10 @@ public class AnimSceneTransition : MonoBehaviour
     /// <summary>跳过当前等待，立即执行转场。</summary>
     public void Skip()
     {
-        if (_running && 允许跳过) _skipRequested = true;
+        if (_running && 允许跳过 && CanSkipNow()) _skipRequested = true;
     }
+
+    private bool CanSkipNow() => Time.unscaledTime - _startedAt >= 跳过需等待;
 
     private void Start()
     {
@@ -116,7 +139,7 @@ public class AnimSceneTransition : MonoBehaviour
 
     private void Update()
     {
-        if (!_running || !允许跳过 || _skipRequested) return;
+        if (!_running || !允许跳过 || _skipRequested || !CanSkipNow()) return;
         if (SkipPressed()) _skipRequested = true;
     }
 
@@ -139,7 +162,11 @@ public class AnimSceneTransition : MonoBehaviour
     {
         _running = true;
         _skipRequested = false;
+        _startedAt = Time.unscaledTime;
         开始播放?.Invoke();
+
+        // 动画和预加载互不干扰：目标场景只在后台准备好，等动画播完那一刻才激活。
+        StartPreload();
 
         if (起始延迟 > 0f) yield return WaitUnscaled(起始延迟);
 
@@ -202,21 +229,87 @@ public class AnimSceneTransition : MonoBehaviour
         StopClip();
     }
 
+    /// <summary>
+    /// 帧动画是固定时长，所以用「时长」作主判定：与 Animator 同步起算，播到片尾就切。
+    /// Animator 先播完或提前归零也立刻放行，动画对象被禁用时仍靠时长兜底，绝不停在登录页。
+    /// </summary>
     private IEnumerator WaitAnimatorRoutine()
     {
-        // 等一帧，确保 Animator 已进入状态
+        // 等一帧，确保 Animator 已进入默认状态
         yield return null;
+
+        float duration = ResolveDuration();
+        float elapsed = SyncOffset(duration);
 
         while (!_skipRequested)
         {
-            if (!等待目标.gameObject.activeInHierarchy || !等待目标.enabled) yield break;
+            elapsed += Time.deltaTime; // Animator 也吃 timeScale，两边同步
 
-            var state = 等待目标.GetCurrentAnimatorStateInfo(0);
-            if (!等待目标.IsInTransition(0) && state.length > 0f && state.normalizedTime >= 0.999f)
+            if (duration > 0f && elapsed >= duration) yield break;
+            if (AnimatorFinished()) yield break;
+
+            if (最多等待 > 0f && elapsed >= 最多等待)
+            {
+                Debug.LogWarning($"[AnimSceneTransition] 等待动画超过 {最多等待:0.##}s，强制转场。", this);
                 yield break;
+            }
 
             yield return null;
         }
+    }
+
+    private float ResolveDuration()
+    {
+        if (等待目标 != null)
+        {
+            var state = 等待目标.GetCurrentAnimatorStateInfo(0);
+            if (state.length > 0f) return state.length;
+        }
+        return 帧动画文件 != null ? 帧动画文件.length : 0f;
+    }
+
+    /// <summary>把计时起点对齐到动画已经播到的位置，避免协程晚启一帧就晚切一帧。</summary>
+    private float SyncOffset(float duration)
+    {
+        if (等待目标 == null || duration <= 0f) return 0f;
+        var state = 等待目标.GetCurrentAnimatorStateInfo(0);
+        return Mathf.Clamp01(state.normalizedTime) * duration;
+    }
+
+    private bool AnimatorFinished()
+    {
+        if (等待目标 == null || !等待目标.isActiveAndEnabled) return false;
+        var state = 等待目标.GetCurrentAnimatorStateInfo(0);
+        return !等待目标.IsInTransition(0) && state.length > 0f && state.normalizedTime >= 0.999f;
+    }
+
+    private void StartPreload()
+    {
+        StartCoroutine(PreloadRoutine());
+    }
+
+    private IEnumerator PreloadRoutine()
+    {
+        // 先让开场几帧画出来，再开始后台加载，避免加载尖峰落在动画起手处。
+        yield return WaitUnscaled(0.5f);
+
+        if (UseFlowManager)
+        {
+            var manager = Manager;
+            if (manager != null) manager.Preload(流程ID);
+            else _preload = null;
+            yield break;
+        }
+
+        if (!提前预加载 || string.IsNullOrEmpty(目标场景)) yield break;
+
+        if (!Application.CanStreamedLevelBeLoaded(目标场景)) yield break;
+
+        _preload = SceneManager.LoadSceneAsync(目标场景);
+        if (_preload == null) yield break;
+
+        // 只加载不激活：动画期间准备数据，播完那一刻再让场景出现。
+        _preload.allowSceneActivation = false;
     }
 
     private IEnumerator WaitUnscaled(float seconds)
@@ -260,6 +353,21 @@ public class AnimSceneTransition : MonoBehaviour
     {
         _running = false;
 
+        // 交给管理器：脚本只发流程 ID，目标场景由 WindowDatabase 的跳转列表决定。
+        if (UseFlowManager)
+        {
+            var manager = Manager;
+            if (manager == null)
+            {
+                Debug.LogWarning(
+                    $"[AnimSceneTransition] 场景里没有 SceneFlowManager，流程 ID「{流程ID}」无法执行。", this);
+                return;
+            }
+
+            manager.Play(流程ID);
+            return;
+        }
+
         if (string.IsNullOrEmpty(目标场景))
         {
             Debug.LogWarning("[AnimSceneTransition] 未设置目标场景！", this);
@@ -277,15 +385,27 @@ public class AnimSceneTransition : MonoBehaviour
 
         if (场景切换方式 == 转场方式.直出直入 || 转场时长 <= 0f)
         {
-            if (异步加载) SceneManager.LoadSceneAsync(目标场景);
-            else SceneManager.LoadScene(目标场景);
+            ActivatePreload();
+            if (_preload == null)
+            {
+                if (异步加载) SceneManager.LoadSceneAsync(目标场景);
+                else SceneManager.LoadScene(目标场景);
+            }
             return;
         }
 
         var runner = new GameObject("__场景转场执行器");
         DontDestroyOnLoad(runner);
         runner.AddComponent<SceneTransitionRunner>().Begin(
-            目标场景, 需要淡出, 需要淡入, 转场时长, 遮罩颜色, 遮罩层级, 异步加载);
+            目标场景, 需要淡出, 需要淡入, 转场时长, 遮罩颜色, 遮罩层级, 异步加载, _preload);
+    }
+
+    /// <summary>激活动画期间预加载好的场景；没有预加载时什么也不做。</summary>
+    private void ActivatePreload()
+    {
+        if (_preload == null) return;
+        _preload.allowSceneActivation = true;
+        _preload = null;
     }
 }
 
@@ -294,12 +414,14 @@ public class AnimSceneTransition : MonoBehaviour
 /// </summary>
 public class SceneTransitionRunner : MonoBehaviour
 {
-    public void Begin(string scene, bool fadeOut, bool fadeIn, float duration, Color color, int sortingOrder, bool async)
+    public void Begin(string scene, bool fadeOut, bool fadeIn, float duration, Color color, int sortingOrder, bool async,
+        AsyncOperation preload = null)
     {
-        StartCoroutine(RunTransition(scene, fadeOut, fadeIn, duration, color, sortingOrder, async));
+        StartCoroutine(RunTransition(scene, fadeOut, fadeIn, duration, color, sortingOrder, async, preload));
     }
 
-    private IEnumerator RunTransition(string scene, bool fadeOut, bool fadeIn, float duration, Color color, int sortingOrder, bool async)
+    private IEnumerator RunTransition(string scene, bool fadeOut, bool fadeIn, float duration, Color color, int sortingOrder, bool async,
+        AsyncOperation preload = null)
     {
         Image mask = null;
 
@@ -311,7 +433,13 @@ public class SceneTransitionRunner : MonoBehaviour
 
         if (fadeOut) yield return FadeMask(mask, 0f, color.a, duration);
 
-        if (async)
+        if (preload != null)
+        {
+            // 动画期间已经加载好，这里只等遮罩盖住再让场景出现
+            preload.allowSceneActivation = true;
+            while (!preload.isDone) yield return null;
+        }
+        else if (async)
         {
             var op = SceneManager.LoadSceneAsync(scene);
             if (op != null) while (!op.isDone) yield return null;

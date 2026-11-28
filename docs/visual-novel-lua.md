@@ -1,4 +1,7 @@
-# Lua 自定义演出
+# Lua 规范（自定义演出）
+
+> 本文只讲 Lua 脚本本身：如何挂载、可用 API、沙箱与限制、生命周期。
+> 剧情脚本（PrologueScript）的文本语法是另一套东西，见 [story-script-syntax.md](story-script-syntax.md)。框架总览见 [visual-novel-framework.md](visual-novel-framework.md)。
 
 ## 用途与入口
 
@@ -35,7 +38,7 @@
 - `rotation`：Z 轴角度。
 - `alpha` / `r` / `g` / `b`：0～1。
 
-临时层在演出遮罩下方、常规背景和立绘上方，不挡住 UI 点击。`fx.portrait/background` 克隆当前图像与几何参数；后续属性修改仍然只作用于克隆。想隐藏原立绘或切背景应在 Lua 节点前后使用既有剧情命令，避免脚本永久改坏舞台状态。
+临时层在演出遮罩下方、常规背景和立绘上方，不挡住 UI 点击。`fx.portrait/background` 克隆当前图像与几何参数；后续属性修改仍然只作用于克隆。想隐藏原立绘或切背景应在 Lua 节点前后使用既有节点命令（见剧情编辑器），避免脚本永久改坏舞台状态。
 
 ```lua
 local h = fx.image("crystal")

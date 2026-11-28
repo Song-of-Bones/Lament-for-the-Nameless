@@ -1,0 +1,43 @@
+{
+    "version": 1,
+    "nodes": [
+        {
+            "scenePath": "Assets/Scenes/Login.unity",
+            "x": 543.0,
+            "y": 113.0,
+            "collapsed": false
+        },
+        {
+            "scenePath": "Assets/Scenes/Lobby.unity",
+            "x": 574.0,
+            "y": 352.0,
+            "collapsed": false
+        },
+        {
+            "scenePath": "Assets/Scenes/Settings.unity",
+            "x": 1062.0,
+            "y": 31.0,
+            "collapsed": false
+        },
+        {
+            "scenePath": "Assets/VisualNovel/Scenes/NovelRuntime.unity",
+            "x": 543.0,
+            "y": 69.0,
+            "collapsed": true
+        },
+        {
+            "scenePath": "Assets/Scenes/1.unity",
+            "x": 1769.0,
+            "y": -7.0,
+            "collapsed": false
+        }
+    ],
+    "edgeColors": [
+        {
+            "key": "Assets/Scenes/Lobby.unity|window|4",
+            "color": "#2294FF"
+        }
+    ],
+    "miniX": 0.0,
+    "miniY": 0.0
+}

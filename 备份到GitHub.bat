@@ -11,13 +11,23 @@ if errorlevel 1 (
     git remote add origin https://github.com/Song-of-Bones/Lament-for-the-Nameless.git
 )
 
+:: Ask for a backup name; empty input falls back to "Auto backup"
+set "NAME="
+set /p NAME=Enter a name for this backup (empty = Auto backup):
+set "NAME=%NAME:"=%"
+
+for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-ddTHH:mm:ss"') do set "DT=%%i"
+
 git add -A
 git diff --cached --quiet >nul 2>&1
 if not errorlevel 1 goto :onlypush
 
-for /f %%i in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-ddTHH:mm:ss"') do set "DT=%%i"
 echo Changes detected, committing...
-git -c user.name="XiaoXieChen-1" -c user.email="XiaoXieChen-1@users.noreply.github.com" commit -m "Auto backup - %DT%"
+if defined NAME (
+    git -c user.name="XiaoXieChen-1" -c user.email="XiaoXieChen-1@users.noreply.github.com" commit -m "%NAME% - %DT%"
+) else (
+    git -c user.name="XiaoXieChen-1" -c user.email="XiaoXieChen-1@users.noreply.github.com" commit -m "Auto backup - %DT%"
+)
 if errorlevel 1 goto :fail
 
 :onlypush

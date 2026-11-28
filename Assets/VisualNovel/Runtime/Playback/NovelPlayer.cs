@@ -101,12 +101,40 @@ namespace Lament.VisualNovel
             clock.Reset();
         }
 
+        /// <summary>
+        /// 写快速存档（槽 0）。返回大厅、切后台或退出前调用，
+        /// 保证跨场景跳转或进程被杀后仍能从大厅继续。
+        /// </summary>
+        public void AutoSave()
+        {
+            try
+            {
+                if (Session == null) return;
+                // 剧情已结束时保存的节点没有继续价值，跳过。
+                if (Session.Status == NovelPlaybackStatus.Ended) return;
+                if (!Saves.TrySave(NovelSaveService.QuickSlot, Session.Snapshot(), out var error))
+                    Debug.LogWarning("[VisualNovel] 自动保存失败：" + error, this);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogWarning("[VisualNovel] 自动保存失败：" + ex.Message, this);
+            }
+        }
+
         public void ReturnToLobby()
         {
+            AutoSave();
             if (!Application.CanStreamedLevelBeLoaded("Lobby")) { Notify("Lobby 未加入 Build Settings"); return; }
             var operation = SceneManager.LoadSceneAsync("Lobby");
             Debug.Log("[VisualNovel] 返回大厅：LoadSceneAsync 已发起=" + (operation != null), this);
         }
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused) AutoSave();
+        }
+
+        private void OnApplicationQuit() => AutoSave();
 
         private void OnChanged()
         {

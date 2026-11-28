@@ -916,9 +916,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8915813d5b96b4ea450ea80b7676ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindowDatabase
-  configs:
-  - id: novel_settings
-    sceneName: Settings
+  configs: []
   jumpConfigs: []
 --- !u!4 &106585382
 Transform:
@@ -2703,19 +2701,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 580587750}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 393611601}
-        m_TargetAssemblyTypeName: Lament.VisualNovel.NovelPresentationController, Lament.VisualNovel
-        m_MethodName: ReturnToLobby
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &580587750
 MonoBehaviour:
   m_ObjectHideFlags: 0

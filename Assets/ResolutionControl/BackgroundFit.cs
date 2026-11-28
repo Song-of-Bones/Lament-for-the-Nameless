@@ -15,6 +15,10 @@ public class BackgroundFit : MonoBehaviour
     [Tooltip("设计时的横屏尺寸，决定裁切基准")]
     [SerializeField] private Vector2 参考分辨率 = new Vector2(2400f, 1080f);
 
+    [Header("溢出余量")]
+    [Tooltip("背景比父级多出的像素，避免像素对齐或 RectMask2D 裁切造成 1px 漏边")]
+    [SerializeField] private float 溢出余量 = 8f;
+
     private Image _image;
     private RectTransform _rect;
     private RectTransform _parent;
@@ -61,8 +65,9 @@ public class BackgroundFit : MonoBehaviour
 
         if (!ResolutionAdapt.已开启)
         {
-            // 关闭：直接拉伸铺满
-            _rect.sizeDelta = Vector2.zero;
+            // 关闭：直接拉伸铺满；仍留少量溢出，避免边缘像素对齐漏出底层
+            float margin = Mathf.Max(0f, 溢出余量);
+            _rect.sizeDelta = new Vector2(margin * 2f, margin * 2f);
             return;
         }
 
@@ -76,9 +81,11 @@ public class BackgroundFit : MonoBehaviour
         float scale = Mathf.Max(screen.x / reference.x, screen.y / reference.y);
         Vector2 display = reference * scale;
 
-        // 锚点拉伸时不改 rect，只补上超出屏幕的尺寸；超出部分由屏幕边界自然裁掉
+        // 锚点拉伸时不改 rect，只补上超出屏幕的尺寸；超出部分由屏幕边界自然裁掉。
+        // 额外加固定的溢出余量，避免正好匹配时因像素对齐/裁切产生 1px 漏边。
+        float overscan = Mathf.Max(0f, 溢出余量);
         _rect.sizeDelta = new Vector2(
-            Mathf.Max(0f, display.x - screen.x),
-            Mathf.Max(0f, display.y - screen.y));
+            Mathf.Max(0f, display.x - screen.x) + overscan * 2f,
+            Mathf.Max(0f, display.y - screen.y) + overscan * 2f);
     }
 }
